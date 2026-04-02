@@ -3,9 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
 import type { RootTabParamList } from './types';
 import { ListsStack } from './ListsStack';
-
-// Placeholder Settings screen
-const Settings = () => null;
+import { Settings } from '../screens/Settings';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 

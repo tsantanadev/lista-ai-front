@@ -1,12 +1,10 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { ListsStackParamList } from './types';
-
-// Placeholder screen components — will be replaced when screens are created
-const ListsHome = () => null;
-const ListDetail = () => null;
-const AddEditList = () => null;
-const AddEditItem = () => null;
+import { ListsHome } from '../screens/ListsHome';
+import { ListDetail } from '../screens/ListDetail';
+import { AddEditList } from '../screens/AddEditList';
+import { AddEditItem } from '../screens/AddEditItem';
 
 const Stack = createNativeStackNavigator<ListsStackParamList>();
 
