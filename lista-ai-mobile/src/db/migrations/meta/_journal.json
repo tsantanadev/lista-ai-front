@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1775144480737,
+      "tag": "0000_lame_stone_men",
+      "breakpoints": true
+    }
+  ]
+}
