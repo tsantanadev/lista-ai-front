@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   Alert,
   StyleSheet,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Plus, ClipboardList } from 'lucide-react-native';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { EmptyState } from '../../components/EmptyState';
 import { ListCard } from '../../components/ListCard';
@@ -40,13 +41,13 @@ function ListsHomeContent({ navigation }: ListsHomeProps) {
     <SafeAreaView style={styles.container}>
       <SyncStatusBar />
       <View style={styles.header}>
-        <Text style={styles.title}>My Lists</Text>
+        <Text style={styles.title}>Lists</Text>
       </View>
       {isLoading ? (
         <ActivityIndicator color="#3B82F6" style={styles.loader} />
       ) : lists.length === 0 ? (
         <EmptyState
-          icon="📋"
+          icon={ClipboardList}
           title="No lists yet"
           subtitle="Tap NEW LIST to create your first shopping list"
         />
@@ -74,7 +75,8 @@ function ListsHomeContent({ navigation }: ListsHomeProps) {
         onPress={() => navigation.navigate('AddEditList', undefined)}
         activeOpacity={0.85}
       >
-        <Text style={styles.fabText}>+ NEW LIST</Text>
+        <Plus size={18} color="#FAFAFA" strokeWidth={2.5} />
+        <Text style={styles.fabText}>NEW LIST</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -99,6 +101,9 @@ const styles = StyleSheet.create({
     bottom: 24,
     right: 24,
     backgroundColor: '#3B82F6',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderRadius: 9999,
