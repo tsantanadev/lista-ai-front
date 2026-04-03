@@ -5,9 +5,10 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Plus, ShoppingCart, ChevronDown, ChevronRight } from 'lucide-react-native';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { EmptyState } from '../../components/EmptyState';
 import { ItemRow } from '../../components/ItemRow';
@@ -57,7 +58,7 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
         <ActivityIndicator color="#3B82F6" style={styles.loader} />
       ) : allItems.length === 0 ? (
         <EmptyState
-          icon="🛒"
+          icon={ShoppingCart}
           title="No items yet"
           subtitle="Tap ADD to add your first item"
         />
@@ -74,8 +75,11 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
                 style={styles.checkedHeader}
                 onPress={() => setShowChecked((v) => !v)}
               >
+                {showChecked
+                  ? <ChevronDown size={16} color="#A1A1AA" strokeWidth={2} />
+                  : <ChevronRight size={16} color="#A1A1AA" strokeWidth={2} />}
                 <Text style={styles.checkedHeaderText}>
-                  {showChecked ? '▼' : '▶'} Checked items ({checked.length})
+                  Checked items ({checked.length})
                 </Text>
               </TouchableOpacity>
             ) : null
@@ -96,7 +100,8 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
         onPress={() => navigation.navigate('AddEditItem', { listId, remoteListId })}
         activeOpacity={0.85}
       >
-        <Text style={styles.addButtonText}>+ ADD</Text>
+        <Plus size={18} color="#FAFAFA" strokeWidth={2.5} />
+        <Text style={styles.addButtonText}>ADD</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -115,6 +120,9 @@ const styles = StyleSheet.create({
   loader: { flex: 1 },
   list: { paddingBottom: 100 },
   checkedHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     paddingHorizontal: 16,
     paddingVertical: 10,
     backgroundColor: '#09090B',
@@ -125,6 +133,9 @@ const styles = StyleSheet.create({
     bottom: 24,
     right: 24,
     backgroundColor: '#3B82F6',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderRadius: 9999,
