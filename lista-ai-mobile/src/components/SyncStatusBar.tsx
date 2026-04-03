@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { RefreshCw, AlertCircle } from 'lucide-react-native';
 import { useSync } from '../hooks/useSync';
 import { executeSync } from '../sync/executor';
 
 export function SyncStatusBar() {
-  const { pendingCount, lastSyncError, isOnline } = useSync();
+  const { pendingCount, lastSyncError } = useSync();
 
   if (!lastSyncError && pendingCount === 0) return null;
 
@@ -24,6 +25,9 @@ export function SyncStatusBar() {
       onPress={isError ? handleRetry : undefined}
       activeOpacity={isError ? 0.8 : 1}
     >
+      {isError
+        ? <AlertCircle size={14} color="#FAFAFA" strokeWidth={2} />
+        : <RefreshCw size={14} color="#FAFAFA" strokeWidth={2} />}
       <Text style={styles.text}>
         {isError
           ? `Sync error — tap to retry`
@@ -35,9 +39,12 @@ export function SyncStatusBar() {
 
 const styles = StyleSheet.create({
   bar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    alignItems: 'center',
+    gap: 6,
   },
   barPending: { backgroundColor: '#D97706' },
   barError: { backgroundColor: '#EF4444' },
