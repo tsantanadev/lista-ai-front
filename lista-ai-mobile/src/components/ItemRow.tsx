@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Square, CheckSquare, Trash2 } from 'lucide-react-native';
 import type { Item } from '../types/item';
 
 interface ItemRowProps {
@@ -18,9 +14,9 @@ export function ItemRow({ item, onToggle, onEdit, onDelete }: ItemRowProps) {
   return (
     <View style={[styles.row, item.checked && styles.rowChecked]}>
       <TouchableOpacity style={styles.checkboxArea} onPress={onToggle} hitSlop={8}>
-        <View style={[styles.checkbox, item.checked && styles.checkboxChecked]}>
-          {item.checked && <Text style={styles.checkmark}>✓</Text>}
-        </View>
+        {item.checked
+          ? <CheckSquare size={22} color="#22C55E" strokeWidth={2} />
+          : <Square size={22} color="#3B82F6" strokeWidth={2} />}
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.content} onPress={onEdit} activeOpacity={0.7}>
@@ -40,7 +36,7 @@ export function ItemRow({ item, onToggle, onEdit, onDelete }: ItemRowProps) {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.deleteArea} onPress={onDelete} hitSlop={8}>
-        <Text style={styles.deleteIcon}>🗑️</Text>
+        <Trash2 size={18} color={item.checked ? '#3F3F46' : '#71717A'} strokeWidth={1.75} />
       </TouchableOpacity>
     </View>
   );
@@ -56,23 +52,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#27272A',
   },
-  rowChecked: { backgroundColor: '#18181B' },
+  rowChecked: { opacity: 0.55 },
   checkboxArea: { marginRight: 12 },
-  checkbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#71717A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  checkboxChecked: { backgroundColor: '#22C55E', borderColor: '#22C55E' },
-  checkmark: { color: '#FAFAFA', fontSize: 14, fontWeight: '700' },
   content: { flex: 1 },
   description: { color: '#FAFAFA', fontSize: 16 },
   descriptionChecked: { color: '#71717A', textDecorationLine: 'line-through' },
   meta: { color: '#A1A1AA', fontSize: 13, marginTop: 2 },
   deleteArea: { marginLeft: 12 },
-  deleteIcon: { fontSize: 18 },
 });
