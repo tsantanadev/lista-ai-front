@@ -69,8 +69,12 @@ The current app uses a blue-grey dark palette (`#09090B` / `#3B82F6`) that doesn
 Replace entire color palette with new tokens.
 
 ### `src/navigation/MainTabs.tsx`
-- Tab bar background: `#1A1C1A`, border: `#0F2E28`
-- Active pill: `#1D9E75`, inactive text: `#888780`
+
+- **3 tabs**: Listas (List icon), Compras (ShoppingCart icon), Perfil (User icon)
+- Tab bar background: `#161A18`, top border: `#1A2420`
+- **Active tab**: icon wrapped in 52×52 rounded-square container (`borderRadius: 14`, `background: rgba(29,158,117,0.15)`, `border: 1.5px solid #1D9E75`), teal icon stroke, bold white label below
+- **Inactive tab**: plain icon (stroke `#888780`), muted label — no container
+- Compras and Perfil screens: "Coming soon" placeholder (same pattern as current Settings)
 
 ### `src/screens/ListsHome/index.tsx`
 - `ActivityIndicator` color: `#1D9E75`
