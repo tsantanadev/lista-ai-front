@@ -17,6 +17,8 @@ import { useListsQuery } from '../../hooks/useLists';
 import type { ListDetailProps } from '../../navigation/types';
 import type { Item } from '../../types/item';
 
+type Section = { title: 'unchecked' | 'checked'; data: Item[] };
+
 function ListDetailContent({ route, navigation }: ListDetailProps) {
   const { listId, listName } = route.params;
   const { data: allItems = [], isLoading } = useItemsQuery(listId);
@@ -31,8 +33,6 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
 
   const uncheckedItems = allItems.filter((i) => !i.checked);
   const checkedItems   = allItems.filter((i) => i.checked);
-
-  type Section = { title: 'unchecked' | 'checked'; data: Item[] };
 
   const sections: Section[] = [
     { title: 'unchecked', data: uncheckedItems },
