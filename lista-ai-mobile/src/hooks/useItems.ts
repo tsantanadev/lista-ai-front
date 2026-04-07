@@ -18,6 +18,7 @@ function mapRow(row: typeof items.$inferSelect): Item {
     checked: row.checked ?? false,
     quantity: row.quantity ?? null,
     price: row.price ?? null,
+    uom: row.uom ?? null,
     updatedAt: row.updatedAt,
     deletedAt: row.deletedAt ?? null,
   };
@@ -53,7 +54,8 @@ export function useCreateItem() {
         description: input.description,
         checked: input.checked ?? false,
         quantity: input.quantity ?? null,
-        price: input.price ?? null,
+        price: null,
+        uom: input.uom ?? null,
         updatedAt: timestamp,
         deletedAt: null,
       });
@@ -105,7 +107,7 @@ export function useUpdateItem() {
           description: updatedDescription,
           checked: updatedChecked,
           quantity: input.quantity !== undefined ? (input.quantity ?? null) : item.quantity,
-          price: input.price !== undefined ? (input.price ?? null) : item.price,
+          uom: input.uom !== undefined ? (input.uom ?? null) : item.uom,
           updatedAt: timestamp,
         })
         .where(eq(items.id, item.id));

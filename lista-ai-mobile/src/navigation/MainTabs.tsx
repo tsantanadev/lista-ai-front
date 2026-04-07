@@ -2,57 +2,53 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { List, Settings as SettingsIcon } from 'lucide-react-native';
+import { List, ShoppingCart, User } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { RootTabParamList } from './types';
 import { ListsStack } from './ListsStack';
-import { Settings as SettingsScreen } from '../screens/Settings';
+import { Compras } from '../screens/Compras';
+import { Perfil } from '../screens/Perfil';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
-const TAB_CONFIG: Record<string, { icon: LucideIcon; label: string }> = {
-  ListsTab: { icon: List, label: 'Lists' },
-  SettingsTab: { icon: SettingsIcon, label: 'Settings' },
+const TAB_CONFIG: Record<keyof RootTabParamList, { icon: LucideIcon; label: string }> = {
+  ListsTab:   { icon: List,          label: 'Listas'  },
+  ComprasTab: { icon: ShoppingCart,  label: 'Compras' },
+  PerfilTab:  { icon: User,          label: 'Perfil'  },
 };
 
-function PillTabBar({ state, navigation }: BottomTabBarProps) {
+function IconBoxTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.bar, { paddingBottom: insets.bottom || 12 }]}>
-      <View style={styles.inner}>
-        {state.routes.map((route, index) => {
-          const isFocused = state.index === index;
-          const config = TAB_CONFIG[route.name];
-          if (!config) return null;
-          const { icon: Icon, label } = config;
+    <View style={[styles.bar, { paddingBottom: insets.bottom || 16 }]}>
+      {state.routes.map((route, index) => {
+        const isFocused = state.index === index;
+        const config = TAB_CONFIG[route.name as keyof RootTabParamList];
+        if (!config) return null;
+        const { icon: Icon, label } = config;
 
-          const onPress = () => {
-            if (!isFocused) {
-              navigation.navigate(route.name);
-            }
-          };
-
-          return (
-            <TouchableOpacity
-              key={route.key}
-              style={[styles.tab, isFocused && styles.tabActive]}
-              onPress={onPress}
-              activeOpacity={0.85}
-            >
+        return (
+          <TouchableOpacity
+            key={route.key}
+            style={styles.tab}
+            onPress={() => { if (!isFocused) navigation.navigate(route.name); }}
+            activeOpacity={0.75}
+          >
+            <View style={[styles.iconBox, isFocused && styles.iconBoxActive]}>
               <Icon
-                size={16}
-                color={isFocused ? '#FFFFFF' : '#71717A'}
-                strokeWidth={2}
+                size={22}
+                color={isFocused ? '#1D9E75' : '#888780'}
+                strokeWidth={1.8}
               />
-              <Text style={[styles.label, isFocused && styles.labelActive]}>
-                {label}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+            </View>
+            <Text style={[styles.label, isFocused && styles.labelActive]}>
+              {label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 }
@@ -60,46 +56,49 @@ function PillTabBar({ state, navigation }: BottomTabBarProps) {
 export function MainTabs() {
   return (
     <Tab.Navigator
-      tabBar={(props) => <PillTabBar {...props} />}
+      tabBar={(props) => <IconBoxTabBar {...props} />}
       screenOptions={{ headerShown: false }}
     >
-      <Tab.Screen name="ListsTab" component={ListsStack} />
-      <Tab.Screen name="SettingsTab" component={SettingsScreen} />
+      <Tab.Screen name="ListsTab"   component={ListsStack} />
+      <Tab.Screen name="ComprasTab" component={Compras} />
+      <Tab.Screen name="PerfilTab"  component={Perfil} />
     </Tab.Navigator>
   );
 }
 
 const styles = StyleSheet.create({
   bar: {
-    backgroundColor: '#18181B',
-    borderTopWidth: 1,
-    borderTopColor: '#27272A',
-    paddingTop: 10,
-    paddingHorizontal: 24,
-  },
-  inner: {
     flexDirection: 'row',
-    gap: 8,
+    backgroundColor: '#161A18',
+    borderTopWidth: 1,
+    borderTopColor: '#1A2420',
+    paddingTop: 12,
+    paddingHorizontal: 8,
   },
   tab: {
     flex: 1,
-    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  iconBox: {
+    width: 52,
+    height: 52,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
-    paddingVertical: 8,
-    borderRadius: 9999,
   },
-  tabActive: {
-    backgroundColor: '#3B82F6',
+  iconBoxActive: {
+    backgroundColor: 'rgba(29,158,117,0.15)',
+    borderWidth: 1.5,
+    borderColor: '#1D9E75',
   },
   label: {
-    color: '#71717A',
-    fontSize: 13,
+    color: '#888780',
+    fontSize: 11,
     fontWeight: '500',
   },
   labelActive: {
-    color: '#FFFFFF',
-    fontWeight: '600',
+    color: '#EEF2F0',
+    fontWeight: '700',
   },
 });

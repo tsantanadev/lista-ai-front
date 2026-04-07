@@ -12,23 +12,24 @@ export function ListsStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: '#18181B' },
-        headerTintColor: '#FAFAFA',
-        headerTitleStyle: { color: '#FAFAFA' },
-        contentStyle: { backgroundColor: '#09090B' },
+        contentStyle: { backgroundColor: '#111210' },
       }}
     >
-      <Stack.Screen name="ListsHome" component={ListsHome} options={{ headerShown: false }} />
-      <Stack.Screen name="ListDetail" component={ListDetail} options={({ route }) => ({ title: route.params.listName })} />
+      <Stack.Screen name="ListsHome"  component={ListsHome}    options={{ headerShown: false }} />
+      <Stack.Screen name="ListDetail" component={ListDetail}   options={{ headerShown: false }} />
       <Stack.Screen
         name="AddEditList"
         component={AddEditList}
-        options={{ presentation: 'modal', title: 'List' }}
+        options={{ presentation: 'modal', headerShown: false }}
       />
       <Stack.Screen
         name="AddEditItem"
         component={AddEditItem}
-        options={{ presentation: 'modal', title: 'Item' }}
+        options={{
+          presentation: 'formSheet',
+          headerShown: false,
+          contentStyle: { backgroundColor: 'transparent' },
+        }}
       />
     </Stack.Navigator>
   );

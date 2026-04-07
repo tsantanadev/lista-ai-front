@@ -1,11 +1,12 @@
 export interface Item {
   id: number;
   remoteId: number | null;
-  listId: number;       // local list PK
+  listId: number;
   description: string;
   checked: boolean;
-  quantity: string | null;
+  quantity: number | null;
   price: number | null;
+  uom: string | null;
   updatedAt: number;
   deletedAt: number | null;
 }
@@ -13,6 +14,6 @@ export interface Item {
 export interface ItemInput {
   description: string;
   checked?: boolean;
-  quantity?: string;
-  price?: number;
+  quantity?: number;
+  uom?: string;
 }

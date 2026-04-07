@@ -10,10 +10,17 @@ export default {
         tag: '0000_lame_stone_men',
         breakpoints: true,
       },
+      {
+        idx: 1,
+        version: '6',
+        when: 1744056000000,
+        tag: '0001_quantity_real_uom',
+        breakpoints: true,
+      },
     ],
   },
   migrations: {
-    '0000_lame_stone_men': `CREATE TABLE \`items\` (
+    m0000: `CREATE TABLE \`items\` (
 \t\`id\` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 \t\`remote_id\` integer,
 \t\`list_id\` integer NOT NULL,
@@ -44,5 +51,28 @@ CREATE TABLE \`sync_queue\` (
 \t\`last_error\` text
 );
 `,
+    m0001: `PRAGMA foreign_keys=OFF;
+--> statement-breakpoint
+CREATE TABLE \`__new_items\` (
+\t\`id\` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+\t\`remote_id\` integer,
+\t\`list_id\` integer NOT NULL,
+\t\`description\` text NOT NULL,
+\t\`checked\` integer DEFAULT false NOT NULL,
+\t\`quantity\` real,
+\t\`price\` real,
+\t\`uom\` text,
+\t\`updated_at\` integer NOT NULL,
+\t\`deleted_at\` integer,
+\tFOREIGN KEY (\`list_id\`) REFERENCES \`lists\`(\`id\`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+INSERT INTO \`__new_items\` SELECT \`id\`, \`remote_id\`, \`list_id\`, \`description\`, \`checked\`, CAST(\`quantity\` AS REAL), \`price\`, NULL, \`updated_at\`, \`deleted_at\` FROM \`items\`;
+--> statement-breakpoint
+DROP TABLE \`items\`;
+--> statement-breakpoint
+ALTER TABLE \`__new_items\` RENAME TO \`items\`;
+--> statement-breakpoint
+PRAGMA foreign_keys=ON;`,
   },
 };

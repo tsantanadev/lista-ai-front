@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   FlatList,
@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Plus, ShoppingCart, ChevronDown, ChevronRight } from 'lucide-react-native';
+import { Plus, ShoppingCart, ArrowLeft } from 'lucide-react-native';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { EmptyState } from '../../components/EmptyState';
 import { ItemRow } from '../../components/ItemRow';
@@ -19,8 +19,6 @@ import type { Item } from '../../types/item';
 
 function ListDetailContent({ route, navigation }: ListDetailProps) {
   const { listId, listName } = route.params;
-  const [showChecked, setShowChecked] = useState(true);
-
   const { data: allItems = [], isLoading } = useItemsQuery(listId);
   const { data: lists = [] } = useListsQuery();
   const updateItem = useUpdateItem();
@@ -29,23 +27,12 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
   const currentList = lists.find((l) => l.id === listId);
   const remoteListId = currentList?.remoteId ?? null;
 
-  const unchecked = allItems.filter((i) => !i.checked);
-  const checked = allItems.filter((i) => i.checked);
-
   const handleToggle = (item: Item) => {
-    updateItem.mutate({
-      item,
-      input: { checked: !item.checked },
-      remoteListId,
-    });
+    updateItem.mutate({ item, input: { checked: !item.checked }, remoteListId });
   };
 
   const handleEdit = (item: Item) => {
-    navigation.navigate('AddEditItem', {
-      listId,
-      remoteListId,
-      itemId: item.id,
-    });
+    navigation.navigate('AddEditItem', { listId, remoteListId, itemId: item.id });
   };
 
   const handleDelete = (item: Item) => {
@@ -54,36 +41,24 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8}>
+          <ArrowLeft size={22} color="#1D9E75" strokeWidth={2} />
+        </TouchableOpacity>
+        <Text style={styles.title} numberOfLines={1}>{listName}</Text>
+      </View>
       {isLoading ? (
-        <ActivityIndicator color="#3B82F6" style={styles.loader} />
+        <ActivityIndicator color="#1D9E75" style={styles.loader} />
       ) : allItems.length === 0 ? (
         <EmptyState
           icon={ShoppingCart}
           title="No items yet"
-          subtitle="Tap ADD to add your first item"
+          subtitle="Tap ADD ITEM to add your first item"
         />
       ) : (
         <FlatList
-          data={[
-            ...unchecked,
-            ...(showChecked ? checked : []),
-          ]}
+          data={allItems}
           keyExtractor={(item) => String(item.id)}
-          ListHeaderComponent={
-            checked.length > 0 ? (
-              <TouchableOpacity
-                style={styles.checkedHeader}
-                onPress={() => setShowChecked((v) => !v)}
-              >
-                {showChecked
-                  ? <ChevronDown size={16} color="#A1A1AA" strokeWidth={2} />
-                  : <ChevronRight size={16} color="#A1A1AA" strokeWidth={2} />}
-                <Text style={styles.checkedHeaderText}>
-                  Checked items ({checked.length})
-                </Text>
-              </TouchableOpacity>
-            ) : null
-          }
           renderItem={({ item }) => (
             <ItemRow
               item={item}
@@ -93,15 +68,16 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
             />
           )}
           contentContainerStyle={styles.list}
+          ItemSeparatorComponent={() => <View style={{ height: 6 }} />}
         />
       )}
       <TouchableOpacity
-        style={styles.addButton}
+        style={styles.fab}
         onPress={() => navigation.navigate('AddEditItem', { listId, remoteListId })}
         activeOpacity={0.85}
       >
-        <Plus size={18} color="#FAFAFA" strokeWidth={2.5} />
-        <Text style={styles.addButtonText}>ADD</Text>
+        <Plus size={16} color="#EEF2F0" strokeWidth={2.5} />
+        <Text style={styles.fabText}>ADD ITEM</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -116,34 +92,37 @@ export function ListDetail(props: ListDetailProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090B' },
-  loader: { flex: 1 },
-  list: { paddingBottom: 100 },
-  checkedHeader: {
+  container: { flex: 1, backgroundColor: '#111210' },
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 10,
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: '#09090B',
+    paddingTop: 16,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#0F2E28',
+    backgroundColor: '#1A1C1A',
   },
-  checkedHeaderText: { color: '#A1A1AA', fontSize: 14, fontWeight: '600' },
-  addButton: {
+  title:  { color: '#EEF2F0', fontSize: 16, fontWeight: '600', flex: 1 },
+  loader: { flex: 1 },
+  list:   { padding: 12, paddingBottom: 100 },
+  fab: {
     position: 'absolute',
     bottom: 24,
     right: 24,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#1D9E75',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     paddingHorizontal: 20,
     paddingVertical: 14,
-    borderRadius: 9999,
+    borderRadius: 12,
     elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowColor: '#1D9E75',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
   },
-  addButtonText: { color: '#FAFAFA', fontWeight: '700', fontSize: 14, letterSpacing: 0.5 },
+  fabText: { color: '#EEF2F0', fontWeight: '700', fontSize: 13, letterSpacing: 0.5 },
 });

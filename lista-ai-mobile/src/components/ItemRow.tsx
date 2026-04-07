@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Square, CheckSquare, Trash2 } from 'lucide-react-native';
+import { Trash2 } from 'lucide-react-native';
 import type { Item } from '../types/item';
 
 interface ItemRowProps {
@@ -11,14 +11,25 @@ interface ItemRowProps {
 }
 
 export function ItemRow({ item, onToggle, onEdit, onDelete }: ItemRowProps) {
+  const qtyLabel = [
+    item.quantity != null ? String(item.quantity) : null,
+    item.uom ?? null,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <View style={[styles.row, item.checked && styles.rowChecked]}>
+      {/* Checkbox */}
       <TouchableOpacity style={styles.checkboxArea} onPress={onToggle} hitSlop={8}>
-        {item.checked
-          ? <CheckSquare size={22} color="#22C55E" strokeWidth={2} />
-          : <Square size={22} color="#3B82F6" strokeWidth={2} />}
+        <View style={[styles.checkbox, item.checked && styles.checkboxDone]}>
+          {item.checked && (
+            <View style={styles.checkmark} />
+          )}
+        </View>
       </TouchableOpacity>
 
+      {/* Content */}
       <TouchableOpacity style={styles.content} onPress={onEdit} activeOpacity={0.7}>
         <Text
           style={[styles.description, item.checked && styles.descriptionChecked]}
@@ -26,17 +37,14 @@ export function ItemRow({ item, onToggle, onEdit, onDelete }: ItemRowProps) {
         >
           {item.description}
         </Text>
-        {(item.quantity || item.price != null) && (
-          <Text style={styles.meta}>
-            {[item.quantity, item.price != null ? `$${item.price.toFixed(2)}` : null]
-              .filter(Boolean)
-              .join(' · ')}
-          </Text>
-        )}
+        {qtyLabel ? (
+          <Text style={[styles.qty, item.checked && styles.qtyChecked]}>{qtyLabel}</Text>
+        ) : null}
       </TouchableOpacity>
 
+      {/* Delete */}
       <TouchableOpacity style={styles.deleteArea} onPress={onDelete} hitSlop={8}>
-        <Trash2 size={18} color={item.checked ? '#3F3F46' : '#71717A'} strokeWidth={1.75} />
+        <Trash2 size={17} color={item.checked ? '#2A2A2A' : '#888780'} strokeWidth={1.75} />
       </TouchableOpacity>
     </View>
   );
@@ -46,17 +54,42 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#18181B',
-    borderBottomWidth: 1,
-    borderBottomColor: '#27272A',
+    paddingHorizontal: 14,
+    paddingVertical: 11,
+    backgroundColor: '#1A1C1A',
+    borderWidth: 1,
+    borderColor: '#0F2E28',
+    borderRadius: 10,
+    marginHorizontal: 12,
+    gap: 10,
   },
-  rowChecked: { opacity: 0.55 },
-  checkboxArea: { marginRight: 12 },
+  rowChecked: { opacity: 0.5 },
+  checkboxArea: { flexShrink: 0 },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 1.5,
+    borderColor: '#1D9E75',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxDone: {
+    backgroundColor: '#1D9E75',
+    borderColor: '#1D9E75',
+  },
+  checkmark: {
+    width: 10,
+    height: 6,
+    borderLeftWidth: 2,
+    borderBottomWidth: 2,
+    borderColor: '#fff',
+    transform: [{ rotate: '-45deg' }, { translateY: -1 }],
+  },
   content: { flex: 1 },
-  description: { color: '#FAFAFA', fontSize: 16 },
-  descriptionChecked: { color: '#71717A', textDecorationLine: 'line-through' },
-  meta: { color: '#A1A1AA', fontSize: 13, marginTop: 2 },
-  deleteArea: { marginLeft: 12 },
+  description: { color: '#EEF2F0', fontSize: 13 },
+  descriptionChecked: { color: '#888780', textDecorationLine: 'line-through' },
+  qty: { color: '#EF9F27', fontSize: 11, fontWeight: '600', marginTop: 2 },
+  qtyChecked: { color: '#888780', textDecorationLine: 'line-through' },
+  deleteArea: { flexShrink: 0 },
 });

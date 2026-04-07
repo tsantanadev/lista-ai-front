@@ -28,11 +28,7 @@ function ListsHomeContent({ navigation }: ListsHomeProps) {
       `Delete "${list.name}"? This cannot be undone.`,
       [
         { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => deleteList.mutate(list),
-        },
+        { text: 'Delete', style: 'destructive', onPress: () => deleteList.mutate(list) },
       ]
     );
   };
@@ -41,10 +37,10 @@ function ListsHomeContent({ navigation }: ListsHomeProps) {
     <SafeAreaView style={styles.container}>
       <SyncStatusBar />
       <View style={styles.header}>
-        <Text style={styles.title}>Lists</Text>
+        <Text style={styles.title}>My Lists</Text>
       </View>
       {isLoading ? (
-        <ActivityIndicator color="#3B82F6" style={styles.loader} />
+        <ActivityIndicator color="#1D9E75" style={styles.loader} />
       ) : lists.length === 0 ? (
         <EmptyState
           icon={ClipboardList}
@@ -58,16 +54,12 @@ function ListsHomeContent({ navigation }: ListsHomeProps) {
           renderItem={({ item }) => (
             <ListCard
               list={item}
-              onPress={() =>
-                navigation.navigate('ListDetail', {
-                  listId: item.id,
-                  listName: item.name,
-                })
-              }
+              onPress={() => navigation.navigate('ListDetail', { listId: item.id, listName: item.name })}
               onDelete={() => handleDelete(item)}
             />
           )}
           contentContainerStyle={styles.list}
+          ItemSeparatorComponent={() => <View style={{ height: 0 }} />}
         />
       )}
       <TouchableOpacity
@@ -75,7 +67,7 @@ function ListsHomeContent({ navigation }: ListsHomeProps) {
         onPress={() => navigation.navigate('AddEditList', undefined)}
         activeOpacity={0.85}
       >
-        <Plus size={18} color="#FAFAFA" strokeWidth={2.5} />
+        <Plus size={16} color="#EEF2F0" strokeWidth={2.5} />
         <Text style={styles.fabText}>NEW LIST</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -91,27 +83,27 @@ export function ListsHome(props: ListsHomeProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090B' },
+  container: { flex: 1, backgroundColor: '#111210' },
   header: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
-  title: { color: '#FAFAFA', fontSize: 28, fontWeight: '700' },
+  title: { color: '#EEF2F0', fontSize: 28, fontWeight: '700' },
   loader: { flex: 1 },
   list: { paddingVertical: 8, paddingBottom: 100 },
   fab: {
     position: 'absolute',
     bottom: 24,
     right: 24,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#1D9E75',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     paddingHorizontal: 20,
     paddingVertical: 14,
-    borderRadius: 9999,
+    borderRadius: 12,
     elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowColor: '#1D9E75',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
   },
-  fabText: { color: '#FAFAFA', fontWeight: '700', fontSize: 14, letterSpacing: 0.5 },
+  fabText: { color: '#EEF2F0', fontWeight: '700', fontSize: 13, letterSpacing: 0.5 },
 });

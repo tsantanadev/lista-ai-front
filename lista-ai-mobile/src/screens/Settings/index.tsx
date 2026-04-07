@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { SyncStatusBar } from '../../components/SyncStatusBar';
 import { useSync } from '../../hooks/useSync';
 import { executeSync } from '../../sync/executor';
@@ -32,15 +33,15 @@ export function Settings() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#09090B' },
+  container: { flex: 1, backgroundColor: '#111210' },
   content: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
-  title: { color: '#FAFAFA', fontSize: 28, fontWeight: '700', marginBottom: 8 },
-  subtitle: { color: '#A1A1AA', fontSize: 16, marginBottom: 32 },
+  title: { color: '#EEF2F0', fontSize: 28, fontWeight: '700', marginBottom: 8 },
+  subtitle: { color: '#888780', fontSize: 16, marginBottom: 32 },
   retryButton: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#1D9E75',
     paddingHorizontal: 24,
     paddingVertical: 12,
-    borderRadius: 9999,
+    borderRadius: 12,
   },
-  retryText: { color: '#FAFAFA', fontWeight: '600' },
+  retryText: { color: '#EEF2F0', fontWeight: '600' },
 });

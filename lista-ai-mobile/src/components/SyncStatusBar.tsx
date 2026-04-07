@@ -9,14 +9,10 @@ export function SyncStatusBar() {
 
   if (!lastSyncError && pendingCount === 0) return null;
 
-  const isError = lastSyncError !== null;
+  const isError = !!lastSyncError;
 
   const handleRetry = async () => {
-    try {
-      await executeSync();
-    } catch {
-      // handled by sync layer
-    }
+    try { await executeSync(); } catch { /* handled by sync layer */ }
   };
 
   return (
@@ -26,11 +22,11 @@ export function SyncStatusBar() {
       activeOpacity={isError ? 0.8 : 1}
     >
       {isError
-        ? <AlertCircle size={14} color="#FAFAFA" strokeWidth={2} />
-        : <RefreshCw size={14} color="#FAFAFA" strokeWidth={2} />}
+        ? <AlertCircle size={14} color="#EEF2F0" strokeWidth={2} />
+        : <RefreshCw size={14} color="#EEF2F0" strokeWidth={2} />}
       <Text style={styles.text}>
         {isError
-          ? `Sync error — tap to retry`
+          ? 'Sync error — tap to retry'
           : `Syncing ${pendingCount} item${pendingCount !== 1 ? 's' : ''}…`}
       </Text>
     </TouchableOpacity>
@@ -45,8 +41,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     gap: 6,
+    backgroundColor: '#1A1C1A',
+    borderBottomWidth: 1,
+    borderBottomColor: '#0F2E28',
   },
-  barPending: { backgroundColor: '#D97706' },
-  barError: { backgroundColor: '#EF4444' },
-  text: { color: '#FAFAFA', fontSize: 13, fontWeight: '500' },
+  barPending: { backgroundColor: '#1A1C1A' },
+  barError:   { backgroundColor: '#EF4444' },
+  text: { color: '#888780', fontSize: 12, fontWeight: '500' },
 });

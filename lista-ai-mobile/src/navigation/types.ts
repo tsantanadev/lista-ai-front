@@ -9,7 +9,8 @@ export type ListsStackParamList = {
 
 export type RootTabParamList = {
   ListsTab: undefined;
-  SettingsTab: undefined;
+  ComprasTab: undefined;
+  PerfilTab: undefined;
 };
 
 export type ListsHomeProps = NativeStackScreenProps<ListsStackParamList, 'ListsHome'>;

@@ -25,9 +25,7 @@ export function ListCard({ list, onPress, onDelete }: ListCardProps) {
     >
       <View style={styles.header}>
         <Text style={styles.name} numberOfLines={1}>{list.name}</Text>
-        <Text style={styles.count}>
-          {total === 0 ? '0 / 0' : `${checked} / ${total}`}
-        </Text>
+        <Text style={styles.count}>{checked} / {total}</Text>
       </View>
       <View style={styles.progressTrack}>
         <View style={[styles.progressFill, { width: `${progress * 100}%` as any }]} />
@@ -41,13 +39,13 @@ export function ListCard({ list, onPress, onDelete }: ListCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#18181B',
+    backgroundColor: '#1A1C1A',
     borderRadius: 12,
     padding: 16,
     marginHorizontal: 16,
-    marginVertical: 6,
+    marginVertical: 5,
     borderWidth: 1,
-    borderColor: '#27272A',
+    borderColor: '#0F2E28',
   },
   header: {
     flexDirection: 'row',
@@ -55,19 +53,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  name: { color: '#FAFAFA', fontSize: 16, fontWeight: '600', flex: 1, marginRight: 8 },
-  count: { color: '#A1A1AA', fontSize: 12 },
+  name:    { color: '#EEF2F0', fontSize: 15, fontWeight: '600', flex: 1, marginRight: 8 },
+  count:   { color: '#888780', fontSize: 12 },
   progressTrack: {
-    height: 5,
-    backgroundColor: '#27272A',
+    height: 4,
+    backgroundColor: '#222420',
     borderRadius: 9999,
     marginBottom: 6,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#22C55E',
+    backgroundColor: '#1D9E75',
     borderRadius: 9999,
   },
-  percent: { color: '#71717A', fontSize: 11 },
+  percent: { color: '#888780', fontSize: 11 },
 });

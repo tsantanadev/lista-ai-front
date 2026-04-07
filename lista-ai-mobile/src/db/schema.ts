@@ -14,8 +14,9 @@ export const items = sqliteTable('items', {
   listId: integer('list_id').notNull().references(() => lists.id),
   description: text('description').notNull(),
   checked: integer('checked', { mode: 'boolean' }).notNull().default(false),
-  quantity: text('quantity'),
+  quantity: real('quantity'),
   price: real('price'),
+  uom: text('uom'),
   updatedAt: integer('updated_at').notNull(),
   deletedAt: integer('deleted_at'),
 });
