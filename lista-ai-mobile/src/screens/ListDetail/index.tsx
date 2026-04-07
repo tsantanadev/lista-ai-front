@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   View,
-  FlatList,
+  SectionList,
   Text,
   TouchableOpacity,
   StyleSheet,
@@ -26,6 +26,20 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
 
   const currentList = lists.find((l) => l.id === listId);
   const remoteListId = currentList?.remoteId ?? null;
+
+  const [checkedVisible, setCheckedVisible] = React.useState(true);
+
+  const uncheckedItems = allItems.filter((i) => !i.checked);
+  const checkedItems   = allItems.filter((i) => i.checked);
+
+  type Section = { title: 'unchecked' | 'checked'; data: Item[] };
+
+  const sections: Section[] = [
+    { title: 'unchecked', data: uncheckedItems },
+    ...(checkedItems.length > 0
+      ? [{ title: 'checked' as const, data: checkedVisible ? checkedItems : [] }]
+      : []),
+  ];
 
   const handleToggle = (item: Item) => {
     updateItem.mutate({ item, input: { checked: !item.checked }, remoteListId });
@@ -56,8 +70,8 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
           subtitle="Tap ADD ITEM to add your first item"
         />
       ) : (
-        <FlatList
-          data={allItems}
+        <SectionList
+          sections={sections}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
             <ItemRow
@@ -67,8 +81,25 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
               onDelete={() => handleDelete(item)}
             />
           )}
+          renderSectionHeader={({ section }) => {
+            if (section.title !== 'checked') return null;
+            return (
+              <TouchableOpacity
+                style={styles.sectionToggle}
+                onPress={() => setCheckedVisible((v) => !v)}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.sectionToggleText}>
+                  ({checkedItems.length}){' '}
+                  {checkedVisible ? 'Hide checked items' : 'Show checked items'}{' '}
+                  {checkedVisible ? '∧' : '∨'}
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
           contentContainerStyle={styles.list}
           ItemSeparatorComponent={() => <View style={{ height: 6 }} />}
+          stickySectionHeadersEnabled={false}
         />
       )}
       <TouchableOpacity
@@ -125,4 +156,17 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
   },
   fabText: { color: '#EEF2F0', fontWeight: '700', fontSize: 13, letterSpacing: 0.5 },
+  sectionToggle: {
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#0F2E28',
+    marginTop: 6,
+    marginBottom: 2,
+  },
+  sectionToggleText: {
+    color: '#1D9E75',
+    fontSize: 13,
+  },
 });
