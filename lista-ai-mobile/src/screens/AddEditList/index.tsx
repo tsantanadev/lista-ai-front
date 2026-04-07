@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   body: { flex: 1, padding: 20, gap: 8 },
   label: {
     color: '#888780',
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: '600',
     textTransform: 'uppercase',
     letterSpacing: 0.7,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     borderColor: '#0F2E28',
     borderRadius: 9,
     color: '#EEF2F0',
-    fontSize: 15,
+    fontSize: 17,
     paddingHorizontal: 14,
     paddingVertical: 11,
   },
@@ -131,5 +131,5 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   saveBtnDisabled: { opacity: 0.4, shadowOpacity: 0 },
-  saveBtnText: { color: '#EEF2F0', fontWeight: '700', fontSize: 15 },
+  saveBtnText: { color: '#EEF2F0', fontWeight: '700', fontSize: 17 },
 });

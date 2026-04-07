@@ -37,10 +37,12 @@ export function ItemRow({ item, onToggle, onEdit, onDelete }: ItemRowProps) {
         >
           {item.description}
         </Text>
-        {qtyLabel ? (
-          <Text style={[styles.qty, item.checked && styles.qtyChecked]}>{qtyLabel}</Text>
-        ) : null}
       </TouchableOpacity>
+
+      {/* Qty */}
+      {qtyLabel ? (
+        <Text style={[styles.qty, item.checked && styles.qtyChecked]}>{qtyLabel}</Text>
+      ) : null}
 
       {/* Delete */}
       <TouchableOpacity style={styles.deleteArea} onPress={onDelete} hitSlop={8}>
@@ -54,8 +56,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 11,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
     backgroundColor: '#1A1C1A',
     borderWidth: 1,
     borderColor: '#0F2E28',
@@ -87,9 +89,9 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-45deg' }, { translateY: -1 }],
   },
   content: { flex: 1 },
-  description: { color: '#EEF2F0', fontSize: 13 },
+  description: { color: '#EEF2F0', fontSize: 15 },
   descriptionChecked: { color: '#888780', textDecorationLine: 'line-through' },
-  qty: { color: '#EF9F27', fontSize: 11, fontWeight: '600', marginTop: 2 },
+  qty: { color: '#EF9F27', fontSize: 13, fontWeight: '600', flexShrink: 0 },
   qtyChecked: { color: '#888780', textDecorationLine: 'line-through' },
   deleteArea: { flexShrink: 0 },
 });

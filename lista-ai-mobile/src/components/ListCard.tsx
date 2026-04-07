@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  name:    { color: '#EEF2F0', fontSize: 15, fontWeight: '600', flex: 1, marginRight: 8 },
-  count:   { color: '#888780', fontSize: 12 },
+  name:    { color: '#EEF2F0', fontSize: 17, fontWeight: '600', flex: 1, marginRight: 8 },
+  count:   { color: '#888780', fontSize: 14 },
   progressTrack: {
     height: 4,
     backgroundColor: '#222420',
@@ -67,5 +67,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#1D9E75',
     borderRadius: 9999,
   },
-  percent: { color: '#888780', fontSize: 11 },
+  percent: { color: '#888780', fontSize: 13 },
 });

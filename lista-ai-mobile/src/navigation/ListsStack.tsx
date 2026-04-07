@@ -13,6 +13,7 @@ export function ListsStack() {
     <Stack.Navigator
       screenOptions={{
         contentStyle: { backgroundColor: '#111210' },
+        animation: 'none',
       }}
     >
       <Stack.Screen name="ListsHome"  component={ListsHome}    options={{ headerShown: false }} />

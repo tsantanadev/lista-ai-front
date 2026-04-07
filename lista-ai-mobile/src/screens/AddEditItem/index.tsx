@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: { color: '#EEF2F0', fontSize: 16, fontWeight: '700' },
-  concluido: { color: '#1D9E75', fontSize: 14, fontWeight: '600' },
+  concluido: { color: '#1D9E75', fontSize: 16, fontWeight: '600' },
   concluidoDisabled: { opacity: 0.35 },
 
   body: { padding: 18, gap: 16 },
@@ -248,13 +248,13 @@ const styles = StyleSheet.create({
     borderColor: '#0F2E28',
     borderRadius: 12,
     color: '#EEF2F0',
-    fontSize: 15,
+    fontSize: 17,
     paddingHorizontal: 14,
     paddingVertical: 12,
   },
   descInputFocused: { borderColor: '#1D9E75' },
 
-  fieldLabel: { color: '#888780', fontSize: 11, fontWeight: '500', marginBottom: 6 },
+  fieldLabel: { color: '#888780', fontSize: 13, fontWeight: '500', marginBottom: 6 },
   qtyLabels: { flexDirection: 'row', alignItems: 'center' },
   btnSpacer: { width: 96 },
 
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   qtyInputFocused: { borderColor: '#1D9E75' },
-  qtyTextInput: { flex: 1, color: '#EEF2F0', fontSize: 14, fontWeight: '500', padding: 0 },
+  qtyTextInput: { flex: 1, color: '#EEF2F0', fontSize: 16, fontWeight: '500', padding: 0 },
 
   stepBtn: {
     width: 44,
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
   chipsRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   chipsLabel: {
     color: '#888780',
-    fontSize: 9,
+    fontSize: 11,
     fontWeight: '700',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
@@ -309,6 +309,6 @@ const styles = StyleSheet.create({
     borderColor: '#0F2E28',
   },
   chipActive: { backgroundColor: '#1D9E75', borderColor: '#1D9E75' },
-  chipText: { color: '#888780', fontSize: 12 },
+  chipText: { color: '#888780', fontSize: 14 },
   chipTextActive: { color: '#fff', fontWeight: '700' },
 });
