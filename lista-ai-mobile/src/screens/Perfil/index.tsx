@@ -1,40 +1,115 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { User } from 'lucide-react-native';
+import { Settings, UserCircle, ChevronRight } from 'lucide-react-native';
+import { useAuthStore } from '../../auth/store';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/types';
+
+const C = {
+  bg:      '#111210',
+  surface: '#161A18',
+  border:  '#1A2420',
+  primary: '#1D9E75',
+  text:    '#EEF2F0',
+  textSub: '#888780',
+} as const;
+
+function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('');
+}
 
 export function Perfil() {
+  const user = useAuthStore((s) => s.user);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const displayName  = user?.name ?? user?.email?.split('@')[0] ?? 'Usuário';
+  const displayEmail = user?.email ?? '';
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Perfil</Text>
+    <SafeAreaView style={s.safe}>
+      {/* Header */}
+      <View style={s.header}>
+        <Text style={s.title}>Perfil</Text>
       </View>
-      <View style={styles.empty}>
-        <View style={styles.iconBadge}>
-          <User size={28} color="#888780" strokeWidth={1.5} />
+
+      {/* Avatar */}
+      <View style={s.avatarArea}>
+        <View style={s.avatarRing}>
+          <Text style={s.avatarText}>{getInitials(displayName)}</Text>
         </View>
-        <Text style={styles.emptyTitle}>Coming soon</Text>
-        <Text style={styles.emptySubtitle}>Profile and settings will be available in a future update</Text>
+        <Text style={s.userName}>{displayName}</Text>
+        <Text style={s.userEmail}>{displayEmail}</Text>
+      </View>
+
+      {/* Menu rows */}
+      <View style={s.menu}>
+        <TouchableOpacity
+          style={s.menuRow}
+          activeOpacity={0.75}
+          onPress={() => navigation.navigate('PerfilInfo')}
+        >
+          <View style={s.menuIcon}>
+            <UserCircle size={20} color={C.primary} strokeWidth={1.6} />
+          </View>
+          <Text style={s.menuLabel}>Informações do perfil</Text>
+          <ChevronRight size={18} color={C.textSub} />
+        </TouchableOpacity>
+
+        <View style={s.separator} />
+
+        <TouchableOpacity style={s.menuRow} activeOpacity={0.75}>
+          <View style={s.menuIcon}>
+            <Settings size={20} color={C.primary} strokeWidth={1.6} />
+          </View>
+          <Text style={s.menuLabel}>Configurações</Text>
+          <ChevronRight size={18} color={C.textSub} />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#111210' },
+const s = StyleSheet.create({
+  safe:   { flex: 1, backgroundColor: C.bg },
   header: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
-  title: { color: '#EEF2F0', fontSize: 28, fontWeight: '700' },
-  empty: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, gap: 12 },
-  iconBadge: {
-    width: 64,
-    height: 64,
-    borderRadius: 9999,
-    backgroundColor: '#1A1C1A',
-    borderWidth: 1,
-    borderColor: '#0F2E28',
-    alignItems: 'center',
-    justifyContent: 'center',
+  title:  { color: C.text, fontSize: 28, fontWeight: '700' },
+
+  avatarArea: { alignItems: 'center', paddingTop: 32, paddingBottom: 36 },
+  avatarRing: {
+    width: 80, height: 80, borderRadius: 40,
+    backgroundColor: 'rgba(29,158,117,0.12)',
+    borderWidth: 2, borderColor: C.primary,
+    alignItems: 'center', justifyContent: 'center',
+    marginBottom: 16,
   },
-  emptyTitle: { color: '#EEF2F0', fontSize: 16, fontWeight: '600' },
-  emptySubtitle: { color: '#888780', fontSize: 13, textAlign: 'center' },
+  avatarText:  { color: C.primary, fontSize: 26, fontWeight: '700' },
+  userName:    { color: C.text,    fontSize: 20, fontWeight: '700', marginBottom: 4 },
+  userEmail:   { color: C.textSub, fontSize: 14 },
+
+  menu: {
+    marginHorizontal: 16,
+    backgroundColor: C.surface,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: C.border,
+    overflow: 'hidden',
+  },
+  menuRow: {
+    flexDirection: 'row', alignItems: 'center',
+    paddingHorizontal: 16, paddingVertical: 16, gap: 12,
+  },
+  menuIcon: {
+    width: 36, height: 36, borderRadius: 10,
+    backgroundColor: 'rgba(29,158,117,0.1)',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  menuLabel:  { flex: 1, color: C.text, fontSize: 15, fontWeight: '500' },
+  separator:  { height: 1, backgroundColor: C.border, marginLeft: 64 },
 });
