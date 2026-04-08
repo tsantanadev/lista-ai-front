@@ -52,6 +52,8 @@ export function Login({ navigation }: LoginProps) {
         setGoogleLoading(true);
         loginGoogle(idToken).finally(() => setGoogleLoading(false));
       }
+    } else if (response?.type === 'error') {
+      useAuthStore.setState({ error: 'Erro ao entrar com Google. Tente novamente.' });
     }
   }, [response]);
 

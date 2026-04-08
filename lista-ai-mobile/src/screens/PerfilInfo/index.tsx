@@ -80,13 +80,13 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
     }
   }
 
-  function confirmDelete() {
+  function confirmLogout() {
     Alert.alert(
-      'Excluir conta',
-      'Tem certeza? Você será desconectado. Esta ação não pode ser desfeita.',
+      'Sair da conta',
+      'Tem certeza que deseja sair?',
       [
         { text: 'Cancelar', style: 'cancel' },
-        { text: 'Excluir', style: 'destructive', onPress: () => logout() },
+        { text: 'Sair', style: 'destructive', onPress: () => logout() },
       ],
     );
   }
@@ -212,10 +212,10 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
             </View>
           </View>
 
-          {/* Delete account */}
-          <TouchableOpacity style={s.deleteBtn} onPress={confirmDelete} activeOpacity={0.8}>
+          {/* Sign out */}
+          <TouchableOpacity style={s.deleteBtn} onPress={confirmLogout} activeOpacity={0.8}>
             <Trash2 size={16} color={C.danger} />
-            <Text style={s.deleteText}>Excluir conta</Text>
+            <Text style={s.deleteText}>Sair da conta</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>

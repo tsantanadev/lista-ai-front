@@ -53,6 +53,8 @@ export function Register({ navigation }: RegisterProps) {
         setGoogleLoading(true);
         loginGoogle(idToken).finally(() => setGoogleLoading(false));
       }
+    } else if (response?.type === 'error') {
+      useAuthStore.setState({ error: 'Erro ao entrar com Google. Tente novamente.' });
     }
   }, [response]);
 

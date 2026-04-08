@@ -10,7 +10,7 @@ export const apiClient = axios.create({
 // ── Request interceptor: attach current access token ──────────────────────────
 apiClient.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
-  if (token) {
+  if (token && !config.url?.startsWith('/v1/auth/')) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
   return config;
@@ -59,7 +59,6 @@ apiClient.interceptors.response.use(
     try {
       await useAuthStore.getState().refreshTokens();
       const newToken = useAuthStore.getState().accessToken!;
-      useAuthStore.getState()._setAccessToken(newToken);
       drainQueue(null, newToken);
       original.headers['Authorization'] = `Bearer ${newToken}`;
       return apiClient(original);
