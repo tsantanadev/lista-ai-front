@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "lista-ai-mobile",
+    "scheme": "listai",
     "slug": "lista-ai-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -28,7 +29,9 @@
     },
     "plugins": [
       "expo-sqlite",
-      "expo-font"
+      "expo-font",
+      "expo-secure-store",
+      "expo-web-browser"
     ]
   }
 }
