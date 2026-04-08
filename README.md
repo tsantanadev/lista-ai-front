@@ -15,11 +15,15 @@ A React Native mobile app for managing shopping lists, built with an **offline-f
 - [Available Scripts](#available-scripts)
 - [Environment Variables](#environment-variables)
 - [Backend API](#backend-api)
+- [Authentication](#authentication)
 
 ---
 
 ## Features
 
+- **Authentication** — email/password registration & login, Google OAuth2 sign-in
+- **Secure sessions** — JWT access tokens (15 min) + rotating opaque refresh tokens stored in the OS keychain
+- **Profile** — avatar with initials, name, email; editable profile info
 - Create, rename, and delete shopping lists
 - Add, edit, check/uncheck, and delete items per list
 - Items support optional **quantity** and **price** fields (local-only)
@@ -45,6 +49,8 @@ A React Native mobile app for managing shopping lists, built with an **offline-f
 | HTTP client | Axios | `^1.14` |
 | Connectivity | @react-native-community/netinfo | `11.4` |
 | Fonts | @expo-google-fonts/inter | `^0.4` |
+| Secure storage | expo-secure-store | `~14` |
+| OAuth / Google | expo-auth-session + expo-web-browser | `~6` / `~14` |
 
 ---
 
@@ -92,8 +98,12 @@ TanStack Query (staleTime: Infinity) ──► SELECT from SQLite
 lista-ai-mobile/
 ├── App.tsx                     # Entry point: fonts, migrations, providers
 ├── src/
+│   ├── auth/                   # Authentication
+│   │   ├── storage.ts          # expo-secure-store wrappers (tokens + user)
+│   │   └── store.ts            # Zustand auth slice (hydrate, login, register, Google, logout)
 │   ├── api/                    # Axios API client
-│   │   ├── client.ts           # Axios instance
+│   │   ├── client.ts           # Axios instance + Bearer token & 401-refresh interceptors
+│   │   ├── auth.ts             # Auth API calls (register, login, google, refresh, logout)
 │   │   ├── lists.ts            # List API calls
 │   │   └── items.ts            # Item API calls
 │   ├── db/                     # SQLite + Drizzle
@@ -116,7 +126,8 @@ lista-ai-mobile/
 │   │   └── useSync.ts          # Exposes sync state, polls pendingCount every 5s
 │   ├── navigation/             # React Navigation
 │   │   ├── types.ts            # TypeScript screen param types
-│   │   ├── RootStack.tsx       # NavigationContainer root
+│   │   ├── RootStack.tsx       # Auth-aware root (AuthStack vs MainTabs)
+│   │   ├── AuthStack.tsx       # Unauthenticated stack (Login → Register)
 │   │   ├── MainTabs.tsx        # Bottom tab navigator
 │   │   └── ListsStack.tsx      # Native stack for lists flow
 │   ├── components/             # Shared UI components
@@ -126,6 +137,10 @@ lista-ai-mobile/
 │   │   ├── ItemRow.tsx         # Row with checkbox, edit, delete
 │   │   └── SyncStatusBar.tsx   # Amber/red sync banner
 │   ├── screens/
+│   │   ├── Login/              # Login screen (email/password + Google)
+│   │   ├── Register/           # Registration screen
+│   │   ├── Perfil/             # Profile screen (avatar, name, email, menu)
+│   │   ├── PerfilInfo/         # Profile info editor (name, phone, address)
 │   │   ├── ListsHome/          # All lists + FAB
 │   │   ├── ListDetail/         # Items in a list
 │   │   ├── AddEditList/        # Modal: create/rename list
@@ -265,10 +280,15 @@ npm run db:studio   # Open Drizzle Studio (DB browser)
 ## Environment Variables
 
 | Variable | Default | Description |
-|---|---|---|
+| --- | --- | --- |
 | `EXPO_PUBLIC_API_BASE_URL` | `http://localhost:8080` | Base URL of the Lista AI REST API |
+| `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` | — | Google OAuth2 web client ID (required for Google sign-in) |
+| `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` | — | Google OAuth2 iOS client ID |
+| `EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID` | — | Google OAuth2 Android client ID |
 
 Create a `.env` file in `lista-ai-mobile/` (see `.env.example`).
+
+> For **Expo Go** development, only `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` is required. Google client IDs are obtained from the [Google Cloud Console](https://console.cloud.google.com). The same web client ID must be set as `GOOGLE_CLIENT_ID` on the backend.
 
 ---
 
@@ -287,3 +307,37 @@ The app communicates with the following endpoints:
 | DELETE | `/v1/lists/{listId}/items/{id}` | Delete an item |
 
 > See the [backend README](../lista-ai/README.md) for full API documentation.
+
+---
+
+## Authentication
+
+The app supports two sign-in methods wired to the Lista AI backend:
+
+| Method | How it works |
+| --- | --- |
+| Email / password | Register via `/v1/auth/register`, login via `/v1/auth/login` |
+| Google OAuth2 | PKCE flow via `expo-auth-session`; the Google `id_token` is sent to `/v1/auth/google` for server-side validation |
+
+### Token management
+
+- **Access token** (JWT, HS256, 15 min) — attached automatically via an Axios request interceptor as `Authorization: Bearer <token>`.
+- **Refresh token** (opaque, 7 days) — stored in the OS keychain/keystore via `expo-secure-store`. On a 401 response the interceptor silently refreshes and retries; on refresh failure the user is signed out.
+- Tokens are **never** sent to `/v1/auth/*` endpoints (interceptor guard).
+
+### Screens
+
+| Screen | Description |
+| --- | --- |
+| Login | Email/password fields + "Continuar com Google" button |
+| Register | Name, email, password + Google sign-in |
+| Profile (Perfil tab) | Avatar with initials, name, email, links to Profile Info and Settings |
+| Profile Info | Editable name, read-only email, local phone/address; sign-out button |
+
+### Setup
+
+1. Create OAuth 2.0 credentials in the [Google Cloud Console](https://console.cloud.google.com).
+2. Add the client IDs to `.env` (see [Environment Variables](#environment-variables)).
+3. Set `GOOGLE_CLIENT_ID` to the web client ID on the backend.
+
+For **Expo Go** development only `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` is required.
