@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 import type { SyncState } from './syncSlice';
 import type { ListsUIState } from './listsSlice';
+import { type LanguageSlice, createLanguageSlice } from './languageSlice';
 
-type StoreState = SyncState & ListsUIState;
+type StoreState = SyncState & ListsUIState & LanguageSlice;
 
 export const useStore = create<StoreState>((set) => ({
   // SyncState
@@ -16,4 +17,7 @@ export const useStore = create<StoreState>((set) => ({
   // ListsUIState
   selectedListId: null,
   setSelectedListId: (id) => set({ selectedListId: id }),
+
+  // LanguageSlice
+  ...createLanguageSlice(set),
 }));
