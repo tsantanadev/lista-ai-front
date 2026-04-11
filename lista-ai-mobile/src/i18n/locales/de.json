@@ -25,9 +25,9 @@
       "fullName": "Vollständiger Name",
       "namePlaceholder": "Max Mustermann",
       "createAccount": "Konto erstellen",
-      "terms": "Durch die Registrierung stimmen Sie unseren ",
+      "terms": "Durch die Registrierung stimmst du unseren ",
       "termsLink": "Nutzungsbedingungen und Datenschutzrichtlinien",
-      "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+      "alreadyHaveAccount": "Hast du bereits ein Konto?",
       "signIn": "Anmelden",
       "googleError": "Fehler bei der Anmeldung mit Google. Bitte erneut versuchen.",
       "createError": "Fehler beim Erstellen des Kontos. Bitte erneut versuchen."
@@ -106,7 +106,7 @@
       "password": "Passwort",
       "signOut": "Abmelden",
       "signOutTitle": "Abmelden",
-      "signOutMessage": "Möchten Sie sich wirklich abmelden?",
+      "signOutMessage": "Möchtest du dich wirklich abmelden?",
       "signOutConfirm": "Abmelden",
       "errorSaving": "Änderungen konnten nicht gespeichert werden."
     }
