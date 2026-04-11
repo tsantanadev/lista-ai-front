@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   Text,
@@ -18,6 +19,7 @@ export function AddEditList({ route, navigation }: AddEditListProps) {
   const isEditing = !!params?.listId;
   const [name, setName] = useState(params?.listName ?? '');
   const [focused, setFocused] = useState(false);
+  const { t } = useTranslation();
 
   const createList = useCreateList();
   const updateList = useUpdateList();
@@ -38,7 +40,7 @@ export function AddEditList({ route, navigation }: AddEditListProps) {
     <SafeAreaView style={styles.container}>
       {/* Header with X */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{isEditing ? 'Edit List' : 'New List'}</Text>
+        <Text style={styles.headerTitle}>{isEditing ? t('lists.addEditList.editTitle') : t('lists.addEditList.newTitle')}</Text>
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8}>
           <View style={styles.xBtn}>
             <X size={16} color="#888780" strokeWidth={2.5} />
@@ -50,12 +52,12 @@ export function AddEditList({ route, navigation }: AddEditListProps) {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.body}
       >
-        <Text style={styles.label}>LIST NAME</Text>
+        <Text style={styles.label}>{t('lists.addEditList.nameLabel')}</Text>
         <TextInput
           style={[styles.input, focused && styles.inputFocused]}
           value={name}
           onChangeText={setName}
-          placeholder="e.g. Weekly Groceries"
+          placeholder={t('lists.addEditList.namePlaceholder')}
           placeholderTextColor="#888780"
           autoFocus
           returnKeyType="done"
@@ -70,7 +72,7 @@ export function AddEditList({ route, navigation }: AddEditListProps) {
           disabled={!name.trim()}
           activeOpacity={0.85}
         >
-          <Text style={styles.saveBtnText}>Save</Text>
+          <Text style={styles.saveBtnText}>{t('common.save')}</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </SafeAreaView>

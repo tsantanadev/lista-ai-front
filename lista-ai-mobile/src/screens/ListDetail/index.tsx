@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   SectionList,
@@ -25,6 +26,7 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
   const { data: lists = [] } = useListsQuery();
   const updateItem = useUpdateItem();
   const deleteItem = useDeleteItem();
+  const { t } = useTranslation();
 
   const currentList = lists.find((l) => l.id === listId);
   const remoteListId = currentList?.remoteId ?? null;
@@ -66,8 +68,8 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
       ) : allItems.length === 0 ? (
         <EmptyState
           icon={ShoppingCart}
-          title="No items yet"
-          subtitle="Tap ADD ITEM to add your first item"
+          title={t('lists.detail.empty.title')}
+          subtitle={t('lists.detail.empty.hint')}
         />
       ) : (
         <SectionList
@@ -91,7 +93,7 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
               >
                 <Text style={styles.sectionToggleText}>
                   ({checkedItems.length}){' '}
-                  {checkedVisible ? 'Hide checked items' : 'Show checked items'}{' '}
+                  {checkedVisible ? t('lists.detail.hideChecked') : t('lists.detail.showChecked')}{' '}
                   {checkedVisible ? '∧' : '∨'}
                 </Text>
               </TouchableOpacity>
@@ -108,7 +110,7 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
         activeOpacity={0.85}
       >
         <Plus size={16} color="#EEF2F0" strokeWidth={2.5} />
-        <Text style={styles.fabText}>ADD ITEM</Text>
+        <Text style={styles.fabText}>{t('lists.detail.addItem')}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

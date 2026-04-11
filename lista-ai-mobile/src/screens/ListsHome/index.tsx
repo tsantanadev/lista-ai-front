@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   FlatList,
@@ -21,14 +22,15 @@ import type { List } from '../../types/list';
 function ListsHomeContent({ navigation }: ListsHomeProps) {
   const { data: lists = [], isLoading } = useListsQuery();
   const deleteList = useDeleteList();
+  const { t } = useTranslation();
 
   const handleDelete = (list: List) => {
     Alert.alert(
-      'Delete List',
-      `Delete "${list.name}"? This cannot be undone.`,
+      t('lists.deleteDialog.title'),
+      t('lists.deleteDialog.message', { name: list.name }),
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () => deleteList.mutate(list) },
+        { text: t('common.cancel'), style: 'cancel' },
+        { text: t('lists.deleteDialog.confirm'), style: 'destructive', onPress: () => deleteList.mutate(list) },
       ]
     );
   };
@@ -37,15 +39,15 @@ function ListsHomeContent({ navigation }: ListsHomeProps) {
     <SafeAreaView style={styles.container}>
       <SyncStatusBar />
       <View style={styles.header}>
-        <Text style={styles.title}>My Lists</Text>
+        <Text style={styles.title}>{t('lists.title')}</Text>
       </View>
       {isLoading ? (
         <ActivityIndicator color="#1D9E75" style={styles.loader} />
       ) : lists.length === 0 ? (
         <EmptyState
           icon={ClipboardList}
-          title="No lists yet"
-          subtitle="Tap NEW LIST to create your first shopping list"
+          title={t('lists.empty.title')}
+          subtitle={t('lists.empty.hint')}
         />
       ) : (
         <FlatList
@@ -68,7 +70,7 @@ function ListsHomeContent({ navigation }: ListsHomeProps) {
         activeOpacity={0.85}
       >
         <Plus size={16} color="#EEF2F0" strokeWidth={2.5} />
-        <Text style={styles.fabText}>NEW LIST</Text>
+        <Text style={styles.fabText}>{t('lists.newList')}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
