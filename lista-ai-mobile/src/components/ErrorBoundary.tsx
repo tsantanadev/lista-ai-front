@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   children: React.ReactNode;
@@ -8,6 +9,19 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+}
+
+function ErrorFallback({ error, onRetry }: { error: Error | null; onRetry: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>{t('errorBoundary.title')}</Text>
+      <Text style={styles.subtitle}>{error?.message}</Text>
+      <TouchableOpacity style={styles.button} onPress={onRetry}>
+        <Text style={styles.buttonText}>{t('errorBoundary.retry')}</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 export class ErrorBoundary extends React.Component<Props, State> {
@@ -27,16 +41,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <View style={styles.container}>
-          <Text style={styles.title}>Something went wrong</Text>
-          <Text style={styles.subtitle}>{this.state.error?.message}</Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.setState({ hasError: false, error: null })}
-          >
-            <Text style={styles.buttonText}>Retry</Text>
-          </TouchableOpacity>
-        </View>
+        <ErrorFallback
+          error={this.state.error}
+          onRetry={() => this.setState({ hasError: false, error: null })}
+        />
       );
     }
     return this.props.children;
@@ -51,7 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 24,
   },
-  title: { color: '#EEF2F0', fontSize: 18, fontWeight: '600', marginBottom: 8 },
+  title:    { color: '#EEF2F0', fontSize: 18, fontWeight: '600', marginBottom: 8 },
   subtitle: { color: '#888780', fontSize: 14, textAlign: 'center', marginBottom: 24 },
   button: {
     backgroundColor: '#1D9E75',

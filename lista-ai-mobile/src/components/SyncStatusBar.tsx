@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { RefreshCw, AlertCircle } from 'lucide-react-native';
 import { useSync } from '../hooks/useSync';
 import { executeSync } from '../sync/executor';
+import { useTranslation } from 'react-i18next';
 
 export function SyncStatusBar() {
   const { pendingCount, lastSyncError } = useSync();
@@ -10,6 +11,7 @@ export function SyncStatusBar() {
   if (!lastSyncError && pendingCount === 0) return null;
 
   const isError = !!lastSyncError;
+  const { t } = useTranslation();
 
   const handleRetry = async () => {
     try { await executeSync(); } catch { /* handled by sync layer */ }
@@ -26,8 +28,8 @@ export function SyncStatusBar() {
         : <RefreshCw size={14} color="#EEF2F0" strokeWidth={2} />}
       <Text style={styles.text}>
         {isError
-          ? 'Sync error — tap to retry'
-          : `Syncing ${pendingCount} item${pendingCount !== 1 ? 's' : ''}…`}
+          ? t('sync.error')
+          : t('sync.syncing', { count: pendingCount })}
       </Text>
     </TouchableOpacity>
   );
