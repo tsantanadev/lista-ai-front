@@ -8,6 +8,8 @@ import { RootStack } from './src/navigation/RootStack';
 import { runMigrations } from './src/db/migrate';
 import { useConnectivity } from './src/hooks/useConnectivity';
 import { useAuthStore } from './src/auth/store';
+import { useStore } from './src/store';
+import './src/i18n'; // initializes i18next synchronously at module load
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,6 +30,7 @@ function AppContent() {
 export default function App() {
   const [migrationsReady, setMigrationsReady] = useState(false);
   const [authReady, setAuthReady]             = useState(false);
+  const [langReady, setLangReady]             = useState(false);
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_600SemiBold,
@@ -50,12 +53,18 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (fontsLoaded && migrationsReady && authReady) {
+    useStore.getState()
+      .initLanguage()
+      .finally(() => setLangReady(true));
+  }, []);
+
+  useEffect(() => {
+    if (fontsLoaded && migrationsReady && authReady && langReady) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, migrationsReady, authReady]);
+  }, [fontsLoaded, migrationsReady, authReady, langReady]);
 
-  if (!fontsLoaded || !migrationsReady || !authReady) {
+  if (!fontsLoaded || !migrationsReady || !authReady || !langReady) {
     return (
       <View style={{ flex: 1, backgroundColor: '#111210', alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator color="#1D9E75" />
