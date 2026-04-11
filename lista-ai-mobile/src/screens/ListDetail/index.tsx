@@ -17,6 +17,7 @@ import { useItemsQuery, useUpdateItem, useDeleteItem } from '../../hooks/useItem
 import { useListsQuery } from '../../hooks/useLists';
 import type { ListDetailProps } from '../../navigation/types';
 import type { Item } from '../../types/item';
+import { useTheme } from '../../theme/ThemeContext';
 
 type Section = { title: 'unchecked' | 'checked'; data: Item[] };
 
@@ -27,6 +28,7 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
   const updateItem = useUpdateItem();
   const deleteItem = useDeleteItem();
   const { t } = useTranslation();
+  const { theme } = useTheme();
 
   const currentList = lists.find((l) => l.id === listId);
   const remoteListId = currentList?.remoteId ?? null;
@@ -55,16 +57,62 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
     deleteItem.mutate({ item, remoteListId });
   };
 
+  const s = StyleSheet.create({
+    container: { flex: 1, backgroundColor: theme.background },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      paddingHorizontal: 16,
+      paddingTop: 16,
+      paddingBottom: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.border,
+      backgroundColor: theme.background,
+    },
+    title:  { color: theme.textPrimary, fontSize: 16, fontWeight: '600', flex: 1 },
+    loader: { flex: 1 },
+    list:   { padding: 12, paddingBottom: 100 },
+    fab: {
+      position: 'absolute',
+      bottom: 24,
+      right: 24,
+      backgroundColor: theme.primary,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingHorizontal: 20,
+      paddingVertical: 14,
+      borderRadius: 12,
+      elevation: 4,
+      shadowColor: theme.primary,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.35,
+      shadowRadius: 8,
+    },
+    fabText: { color: '#FFFFFF', fontWeight: '700', fontSize: 13, letterSpacing: 0.5 },
+    sectionToggle: {
+      paddingVertical: 12,
+      alignItems: 'center',
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      borderColor: theme.border,
+      marginTop: 6,
+      marginBottom: 2,
+    },
+    sectionToggleText: { color: theme.primary, fontSize: 13 },
+  });
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView style={s.container}>
+      <View style={s.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8}>
-          <ArrowLeft size={22} color="#1D9E75" strokeWidth={2} />
+          <ArrowLeft size={22} color={theme.primary} strokeWidth={2} />
         </TouchableOpacity>
-        <Text style={styles.title} numberOfLines={1}>{listName}</Text>
+        <Text style={s.title} numberOfLines={1}>{listName}</Text>
       </View>
       {isLoading ? (
-        <ActivityIndicator color="#1D9E75" style={styles.loader} />
+        <ActivityIndicator color={theme.primary} style={s.loader} />
       ) : allItems.length === 0 ? (
         <EmptyState
           icon={ShoppingCart}
@@ -87,11 +135,11 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
             if (section.title !== 'checked') return null;
             return (
               <TouchableOpacity
-                style={styles.sectionToggle}
+                style={s.sectionToggle}
                 onPress={() => setCheckedVisible((v) => !v)}
                 activeOpacity={0.7}
               >
-                <Text style={styles.sectionToggleText}>
+                <Text style={s.sectionToggleText}>
                   ({checkedItems.length}){' '}
                   {checkedVisible ? t('lists.detail.hideChecked') : t('lists.detail.showChecked')}{' '}
                   {checkedVisible ? '∧' : '∨'}
@@ -99,18 +147,18 @@ function ListDetailContent({ route, navigation }: ListDetailProps) {
               </TouchableOpacity>
             );
           }}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={s.list}
           ItemSeparatorComponent={() => <View style={{ height: 6 }} />}
           stickySectionHeadersEnabled={false}
         />
       )}
       <TouchableOpacity
-        style={styles.fab}
+        style={s.fab}
         onPress={() => navigation.navigate('AddEditItem', { listId, remoteListId })}
         activeOpacity={0.85}
       >
-        <Plus size={16} color="#EEF2F0" strokeWidth={2.5} />
-        <Text style={styles.fabText}>{t('lists.detail.addItem')}</Text>
+        <Plus size={16} color="#FFFFFF" strokeWidth={2.5} />
+        <Text style={s.fabText}>{t('lists.detail.addItem')}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -123,52 +171,3 @@ export function ListDetail(props: ListDetailProps) {
     </ErrorBoundary>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#111210' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#0F2E28',
-    backgroundColor: '#1A1C1A',
-  },
-  title:  { color: '#EEF2F0', fontSize: 16, fontWeight: '600', flex: 1 },
-  loader: { flex: 1 },
-  list:   { padding: 12, paddingBottom: 100 },
-  fab: {
-    position: 'absolute',
-    bottom: 24,
-    right: 24,
-    backgroundColor: '#1D9E75',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    borderRadius: 12,
-    elevation: 4,
-    shadowColor: '#1D9E75',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-  },
-  fabText: { color: '#EEF2F0', fontWeight: '700', fontSize: 13, letterSpacing: 0.5 },
-  sectionToggle: {
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#0F2E28',
-    marginTop: 6,
-    marginBottom: 2,
-  },
-  sectionToggleText: {
-    color: '#1D9E75',
-    fontSize: 13,
-  },
-});

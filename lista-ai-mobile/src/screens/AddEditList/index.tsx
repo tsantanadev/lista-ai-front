@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { X } from 'lucide-react-native';
 import { useCreateList, useUpdateList, useListsQuery } from '../../hooks/useLists';
 import type { AddEditListProps } from '../../navigation/types';
+import { useTheme } from '../../theme/ThemeContext';
 
 export function AddEditList({ route, navigation }: AddEditListProps) {
   const params = route.params;
@@ -20,6 +21,7 @@ export function AddEditList({ route, navigation }: AddEditListProps) {
   const [name, setName] = useState(params?.listName ?? '');
   const [focused, setFocused] = useState(false);
   const { t } = useTranslation();
+  const { theme } = useTheme();
 
   const createList = useCreateList();
   const updateList = useUpdateList();
@@ -36,102 +38,99 @@ export function AddEditList({ route, navigation }: AddEditListProps) {
     navigation.goBack();
   };
 
+  const s = StyleSheet.create({
+    container: { flex: 1, backgroundColor: theme.surface },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 18,
+      paddingVertical: 14,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.border,
+    },
+    headerTitle: { color: theme.textPrimary, fontSize: 16, fontWeight: '700' },
+    xBtn: {
+      width: 30,
+      height: 30,
+      borderRadius: 8,
+      backgroundColor: theme.background,
+      borderWidth: 1,
+      borderColor: theme.border,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    body:  { flex: 1, padding: 20, gap: 8 },
+    label: {
+      color: theme.neutral,
+      fontSize: 12,
+      fontWeight: '600',
+      textTransform: 'uppercase',
+      letterSpacing: 0.7,
+    },
+    input: {
+      backgroundColor: theme.background,
+      borderWidth: 1,
+      borderColor: theme.border,
+      borderRadius: 9,
+      color: theme.textPrimary,
+      fontSize: 17,
+      paddingHorizontal: 14,
+      paddingVertical: 11,
+    },
+    inputFocused: { borderColor: theme.primary, borderWidth: 1.5 },
+    saveBtn: {
+      backgroundColor: theme.primary,
+      borderRadius: 12,
+      paddingVertical: 15,
+      alignItems: 'center',
+      marginTop: 8,
+      shadowColor: theme.primary,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.35,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    saveBtnDisabled: { opacity: 0.4, shadowOpacity: 0 },
+    saveBtnText: { color: '#FFFFFF', fontWeight: '700', fontSize: 17 },
+  });
+
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header with X */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>{isEditing ? t('lists.addEditList.editTitle') : t('lists.addEditList.newTitle')}</Text>
+    <SafeAreaView style={s.container}>
+      <View style={s.header}>
+        <Text style={s.headerTitle}>{isEditing ? t('lists.addEditList.editTitle') : t('lists.addEditList.newTitle')}</Text>
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8}>
-          <View style={styles.xBtn}>
-            <X size={16} color="#888780" strokeWidth={2.5} />
+          <View style={s.xBtn}>
+            <X size={16} color={theme.neutral} strokeWidth={2.5} />
           </View>
         </TouchableOpacity>
       </View>
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.body}
+        style={s.body}
       >
-        <Text style={styles.label}>{t('lists.addEditList.nameLabel')}</Text>
+        <Text style={s.label}>{t('lists.addEditList.nameLabel')}</Text>
         <TextInput
-          style={[styles.input, focused && styles.inputFocused]}
+          style={[s.input, focused && s.inputFocused]}
           value={name}
           onChangeText={setName}
           placeholder={t('lists.addEditList.namePlaceholder')}
-          placeholderTextColor="#888780"
+          placeholderTextColor={theme.neutral}
           autoFocus
           returnKeyType="done"
           onSubmitEditing={handleSave}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
         />
-
         <TouchableOpacity
-          style={[styles.saveBtn, !name.trim() && styles.saveBtnDisabled]}
+          style={[s.saveBtn, !name.trim() && s.saveBtnDisabled]}
           onPress={handleSave}
           disabled={!name.trim()}
           activeOpacity={0.85}
         >
-          <Text style={styles.saveBtnText}>{t('common.save')}</Text>
+          <Text style={s.saveBtnText}>{t('common.save')}</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#1A1C1A' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#0F2E28',
-  },
-  headerTitle: { color: '#EEF2F0', fontSize: 16, fontWeight: '700' },
-  xBtn: {
-    width: 30,
-    height: 30,
-    borderRadius: 8,
-    backgroundColor: '#111210',
-    borderWidth: 1,
-    borderColor: '#0F2E28',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  body: { flex: 1, padding: 20, gap: 8 },
-  label: {
-    color: '#888780',
-    fontSize: 12,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 0.7,
-  },
-  input: {
-    backgroundColor: '#111210',
-    borderWidth: 1,
-    borderColor: '#0F2E28',
-    borderRadius: 9,
-    color: '#EEF2F0',
-    fontSize: 17,
-    paddingHorizontal: 14,
-    paddingVertical: 11,
-  },
-  inputFocused: { borderColor: '#1D9E75', borderWidth: 1.5 },
-  saveBtn: {
-    backgroundColor: '#1D9E75',
-    borderRadius: 12,
-    paddingVertical: 15,
-    alignItems: 'center',
-    marginTop: 8,
-    shadowColor: '#1D9E75',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  saveBtnDisabled: { opacity: 0.4, shadowOpacity: 0 },
-  saveBtnText: { color: '#EEF2F0', fontWeight: '700', fontSize: 17 },
-});

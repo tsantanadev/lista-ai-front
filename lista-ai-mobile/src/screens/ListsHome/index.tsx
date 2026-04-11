@@ -18,11 +18,13 @@ import { SyncStatusBar } from '../../components/SyncStatusBar';
 import { useListsQuery, useDeleteList } from '../../hooks/useLists';
 import type { ListsHomeProps } from '../../navigation/types';
 import type { List } from '../../types/list';
+import { useTheme } from '../../theme/ThemeContext';
 
 function ListsHomeContent({ navigation }: ListsHomeProps) {
   const { data: lists = [], isLoading } = useListsQuery();
   const deleteList = useDeleteList();
   const { t } = useTranslation();
+  const { theme } = useTheme();
 
   const handleDelete = (list: List) => {
     Alert.alert(
@@ -35,14 +37,40 @@ function ListsHomeContent({ navigation }: ListsHomeProps) {
     );
   };
 
+  const s = StyleSheet.create({
+    container: { flex: 1, backgroundColor: theme.background },
+    header:    { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8, backgroundColor: theme.background },
+    title:     { color: theme.textPrimary, fontSize: 28, fontWeight: '700' },
+    loader:    { flex: 1 },
+    list:      { paddingVertical: 8, paddingBottom: 100 },
+    fab: {
+      position: 'absolute',
+      bottom: 24,
+      right: 24,
+      backgroundColor: theme.primary,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingHorizontal: 20,
+      paddingVertical: 14,
+      borderRadius: 12,
+      elevation: 4,
+      shadowColor: theme.primary,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.35,
+      shadowRadius: 8,
+    },
+    fabText: { color: theme.textPrimary, fontWeight: '700', fontSize: 13, letterSpacing: 0.5 },
+  });
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={s.container}>
       <SyncStatusBar />
-      <View style={styles.header}>
-        <Text style={styles.title}>{t('lists.title')}</Text>
+      <View style={s.header}>
+        <Text style={s.title}>{t('lists.title')}</Text>
       </View>
       {isLoading ? (
-        <ActivityIndicator color="#1D9E75" style={styles.loader} />
+        <ActivityIndicator color={theme.primary} style={s.loader} />
       ) : lists.length === 0 ? (
         <EmptyState
           icon={ClipboardList}
@@ -60,17 +88,17 @@ function ListsHomeContent({ navigation }: ListsHomeProps) {
               onDelete={() => handleDelete(item)}
             />
           )}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={s.list}
           ItemSeparatorComponent={() => <View style={{ height: 0 }} />}
         />
       )}
       <TouchableOpacity
-        style={styles.fab}
+        style={s.fab}
         onPress={() => navigation.navigate('AddEditList', undefined)}
         activeOpacity={0.85}
       >
-        <Plus size={16} color="#EEF2F0" strokeWidth={2.5} />
-        <Text style={styles.fabText}>{t('lists.newList')}</Text>
+        <Plus size={16} color="#FFFFFF" strokeWidth={2.5} />
+        <Text style={s.fabText}>{t('lists.newList')}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -83,29 +111,3 @@ export function ListsHome(props: ListsHomeProps) {
     </ErrorBoundary>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#111210' },
-  header: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
-  title: { color: '#EEF2F0', fontSize: 28, fontWeight: '700' },
-  loader: { flex: 1 },
-  list: { paddingVertical: 8, paddingBottom: 100 },
-  fab: {
-    position: 'absolute',
-    bottom: 24,
-    right: 24,
-    backgroundColor: '#1D9E75',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    borderRadius: 12,
-    elevation: 4,
-    shadowColor: '#1D9E75',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-  },
-  fabText: { color: '#EEF2F0', fontWeight: '700', fontSize: 13, letterSpacing: 0.5 },
-});
