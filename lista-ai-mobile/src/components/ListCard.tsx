@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import type { List } from '../types/list';
 import { useItemsQuery } from '../hooks/useItems';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../theme/ThemeContext';
 
 interface ListCardProps {
   list: List;
@@ -17,57 +18,58 @@ export function ListCard({ list, onPress, onDelete }: ListCardProps) {
   const progress = total > 0 ? checked / total : 0;
   const percent = Math.round(progress * 100);
   const { t } = useTranslation();
+  const { theme } = useTheme();
+
+  const s = StyleSheet.create({
+    card: {
+      backgroundColor: theme.surface,
+      borderRadius: 12,
+      padding: 16,
+      marginHorizontal: 16,
+      marginVertical: 5,
+      borderWidth: 1,
+      borderColor: theme.border,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 10,
+    },
+    name:  { color: theme.textPrimary, fontSize: 17, fontWeight: '600', flex: 1, marginRight: 8 },
+    count: { color: theme.neutral, fontSize: 14 },
+    progressTrack: {
+      height: 4,
+      backgroundColor: theme.progressTrack,
+      borderRadius: 9999,
+      marginBottom: 6,
+      overflow: 'hidden',
+    },
+    progressFill: {
+      height: '100%' as any,
+      backgroundColor: theme.primary,
+      borderRadius: 9999,
+    },
+    percent: { color: theme.neutral, fontSize: 13 },
+  });
 
   return (
     <TouchableOpacity
-      style={styles.card}
+      style={s.card}
       onPress={onPress}
       onLongPress={onDelete}
       activeOpacity={0.8}
     >
-      <View style={styles.header}>
-        <Text style={styles.name} numberOfLines={1}>{list.name}</Text>
-        <Text style={styles.count}>{checked} / {total}</Text>
+      <View style={s.header}>
+        <Text style={s.name} numberOfLines={1}>{list.name}</Text>
+        <Text style={s.count}>{checked} / {total}</Text>
       </View>
-      <View style={styles.progressTrack}>
-        <View style={[styles.progressFill, { width: `${progress * 100}%` as any }]} />
+      <View style={s.progressTrack}>
+        <View style={[s.progressFill, { width: `${progress * 100}%` as any }]} />
       </View>
-      <Text style={styles.percent}>
+      <Text style={s.percent}>
         {total === 0 ? t('lists.card.noItems') : t('lists.card.percentComplete', { percent })}
       </Text>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#1A1C1A',
-    borderRadius: 12,
-    padding: 16,
-    marginHorizontal: 16,
-    marginVertical: 5,
-    borderWidth: 1,
-    borderColor: '#0F2E28',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  name:    { color: '#EEF2F0', fontSize: 17, fontWeight: '600', flex: 1, marginRight: 8 },
-  count:   { color: '#888780', fontSize: 14 },
-  progressTrack: {
-    height: 4,
-    backgroundColor: '#222420',
-    borderRadius: 9999,
-    marginBottom: 6,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#1D9E75',
-    borderRadius: 9999,
-  },
-  percent: { color: '#888780', fontSize: 13 },
-});
