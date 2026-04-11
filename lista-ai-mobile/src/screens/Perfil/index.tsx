@@ -66,7 +66,11 @@ export function Perfil() {
 
         <View style={s.separator} />
 
-        <TouchableOpacity style={s.menuRow} activeOpacity={0.75}>
+        <TouchableOpacity
+          style={s.menuRow}
+          activeOpacity={0.75}
+          onPress={() => navigation.navigate('Settings')}
+        >
           <View style={s.menuIcon}>
             <Settings size={20} color={C.primary} strokeWidth={1.6} />
           </View>

@@ -6,6 +6,7 @@ import type { RootStackParamList } from './types';
 import { AuthStack }  from './AuthStack';
 import { MainTabs }   from './MainTabs';
 import { PerfilInfo } from '../screens/PerfilInfo';
+import { Settings }  from '../screens/Settings';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -21,6 +22,11 @@ export function RootStack() {
             <Stack.Screen
               name="PerfilInfo"
               component={PerfilInfo}
+              options={{ animation: 'slide_from_right' }}
+            />
+            <Stack.Screen
+              name="Settings"
+              component={Settings}
               options={{ animation: 'slide_from_right' }}
             />
           </>
