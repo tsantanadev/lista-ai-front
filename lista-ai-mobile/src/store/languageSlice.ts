@@ -34,11 +34,15 @@ export function createLanguageSlice(
     },
 
     initLanguage: async () => {
-      const stored = await AsyncStorage.getItem(LANGUAGE_KEY);
-      const deviceTag = Localization.getLocales()[0]?.languageTag ?? 'en';
-      const lang = matchLocale(stored ?? deviceTag);
-      await i18n.changeLanguage(lang);
-      set({ language: lang });
+      try {
+        const stored = await AsyncStorage.getItem(LANGUAGE_KEY);
+        const deviceTag = Localization.getLocales()[0]?.languageTag ?? 'en';
+        const lang = matchLocale(stored ?? deviceTag);
+        await i18n.changeLanguage(lang);
+        set({ language: lang });
+      } catch {
+        // Fall back to default 'en' which was set during i18n module init
+      }
     },
   };
 }
