@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ShoppingBag, Eye, EyeOff, Mail, Lock } from 'lucide-react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../auth/store';
 import type { LoginProps } from '../../navigation/types';
 import i18n from '../../i18n';
@@ -38,6 +39,7 @@ export function Login({ navigation }: LoginProps) {
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const { loginLocal, loginGoogle, error, clearError } = useAuthStore();
+  const { t } = useTranslation();
 
   const [_req, response, promptAsync] = Google.useAuthRequest({
     webClientId:     process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
@@ -106,7 +108,7 @@ export function Login({ navigation }: LoginProps) {
             ) : (
               <>
                 <Text style={s.googleG}>G</Text>
-                <Text style={s.googleLabel}>Continuar com Google</Text>
+                <Text style={s.googleLabel}>{t('auth.continueWithGoogle')}</Text>
               </>
             )}
           </TouchableOpacity>
@@ -114,17 +116,17 @@ export function Login({ navigation }: LoginProps) {
           {/* Divider */}
           <View style={s.divider}>
             <View style={s.dividerLine} />
-            <Text style={s.dividerText}>ou</Text>
+            <Text style={s.dividerText}>{t('common.or')}</Text>
             <View style={s.dividerLine} />
           </View>
 
           {/* Email */}
-          <Text style={s.label}>E-mail</Text>
+          <Text style={s.label}>{t('auth.email')}</Text>
           <View style={s.inputRow}>
             <Mail size={16} color={C.textSub} />
             <TextInput
               style={s.input}
-              placeholder="seu@email.com"
+              placeholder={t('auth.emailPlaceholder')}
               placeholderTextColor={C.textSub}
               value={email}
               onChangeText={setEmail}
@@ -136,12 +138,12 @@ export function Login({ navigation }: LoginProps) {
           </View>
 
           {/* Password */}
-          <Text style={[s.label, { marginTop: 16 }]}>Senha</Text>
+          <Text style={[s.label, { marginTop: 16 }]}>{t('auth.password')}</Text>
           <View style={s.inputRow}>
             <Lock size={16} color={C.textSub} />
             <TextInput
               style={s.input}
-              placeholder="••••••••"
+              placeholder={t('auth.passwordPlaceholder')}
               placeholderTextColor={C.textSub}
               value={password}
               onChangeText={setPassword}
@@ -165,19 +167,19 @@ export function Login({ navigation }: LoginProps) {
           >
             {loading
               ? <ActivityIndicator color="#fff" />
-              : <Text style={s.primaryBtnText}>Entrar</Text>}
+              : <Text style={s.primaryBtnText}>{t('auth.login.signIn')}</Text>}
           </TouchableOpacity>
 
           {/* Forgot */}
           <TouchableOpacity style={s.linkRow}>
-            <Text style={s.linkText}>Esqueceu a senha?</Text>
+            <Text style={s.linkText}>{t('auth.login.forgotPassword')}</Text>
           </TouchableOpacity>
 
           {/* Register */}
           <View style={[s.linkRow, { marginTop: 4 }]}>
-            <Text style={s.mutedText}>Não tem uma conta? </Text>
+            <Text style={s.mutedText}>{t('auth.login.noAccount')} </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text style={s.link}>Cadastre-se</Text>
+              <Text style={s.link}>{t('auth.login.signUp')}</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

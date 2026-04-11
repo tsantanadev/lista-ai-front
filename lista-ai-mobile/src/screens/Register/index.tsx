@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ShoppingBag, Eye, EyeOff, Mail, Lock, User } from 'lucide-react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../auth/store';
 import type { RegisterProps } from '../../navigation/types';
 import i18n from '../../i18n';
@@ -39,6 +40,7 @@ export function Register({ navigation }: RegisterProps) {
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const { register, loginGoogle, error, clearError } = useAuthStore();
+  const { t } = useTranslation();
 
   const [_req, response, promptAsync] = Google.useAuthRequest({
     webClientId:     process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
@@ -109,7 +111,7 @@ export function Register({ navigation }: RegisterProps) {
             ) : (
               <>
                 <Text style={s.googleG}>G</Text>
-                <Text style={s.googleLabel}>Continuar com Google</Text>
+                <Text style={s.googleLabel}>{t('auth.continueWithGoogle')}</Text>
               </>
             )}
           </TouchableOpacity>
@@ -117,17 +119,17 @@ export function Register({ navigation }: RegisterProps) {
           {/* Divider */}
           <View style={s.divider}>
             <View style={s.dividerLine} />
-            <Text style={s.dividerText}>ou</Text>
+            <Text style={s.dividerText}>{t('common.or')}</Text>
             <View style={s.dividerLine} />
           </View>
 
           {/* Name */}
-          <Text style={s.label}>Nome completo</Text>
+          <Text style={s.label}>{t('auth.register.fullName')}</Text>
           <View style={s.inputRow}>
             <User size={16} color={C.textSub} />
             <TextInput
               style={s.input}
-              placeholder="João Silva"
+              placeholder={t('auth.register.namePlaceholder')}
               placeholderTextColor={C.textSub}
               value={name}
               onChangeText={setName}
@@ -137,12 +139,12 @@ export function Register({ navigation }: RegisterProps) {
           </View>
 
           {/* Email */}
-          <Text style={[s.label, { marginTop: 16 }]}>E-mail</Text>
+          <Text style={[s.label, { marginTop: 16 }]}>{t('auth.email')}</Text>
           <View style={s.inputRow}>
             <Mail size={16} color={C.textSub} />
             <TextInput
               style={s.input}
-              placeholder="seu@email.com"
+              placeholder={t('auth.emailPlaceholder')}
               placeholderTextColor={C.textSub}
               value={email}
               onChangeText={setEmail}
@@ -154,12 +156,12 @@ export function Register({ navigation }: RegisterProps) {
           </View>
 
           {/* Password */}
-          <Text style={[s.label, { marginTop: 16 }]}>Senha</Text>
+          <Text style={[s.label, { marginTop: 16 }]}>{t('auth.password')}</Text>
           <View style={s.inputRow}>
             <Lock size={16} color={C.textSub} />
             <TextInput
               style={s.input}
-              placeholder="••••••••"
+              placeholder={t('auth.passwordPlaceholder')}
               placeholderTextColor={C.textSub}
               value={password}
               onChangeText={setPassword}
@@ -183,20 +185,20 @@ export function Register({ navigation }: RegisterProps) {
           >
             {loading
               ? <ActivityIndicator color="#fff" />
-              : <Text style={s.primaryBtnText}>Criar conta</Text>}
+              : <Text style={s.primaryBtnText}>{t('auth.register.createAccount')}</Text>}
           </TouchableOpacity>
 
           {/* Terms */}
           <Text style={s.terms}>
-            Ao se cadastrar, você concorda com nossos{' '}
-            <Text style={s.termsLink}>Termos e Política de Privacidade</Text>
+            {t('auth.register.terms')}{' '}
+            <Text style={s.termsLink}>{t('auth.register.termsLink')}</Text>
           </Text>
 
           {/* Login link */}
           <View style={[s.linkRow, { marginTop: 12 }]}>
-            <Text style={s.mutedText}>Já tem uma conta? </Text>
+            <Text style={s.mutedText}>{t('auth.register.alreadyHaveAccount')} </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={s.link}>Entrar</Text>
+              <Text style={s.link}>{t('auth.register.signIn')}</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
