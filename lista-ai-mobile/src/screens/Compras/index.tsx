@@ -2,19 +2,22 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ShoppingCart } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 
 export function Compras() {
+  const { t } = useTranslation();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Compras</Text>
+        <Text style={styles.title}>{t('shopping.title')}</Text>
       </View>
       <View style={styles.empty}>
         <View style={styles.iconBadge}>
           <ShoppingCart size={28} color="#888780" strokeWidth={1.5} />
         </View>
-        <Text style={styles.emptyTitle}>Coming soon</Text>
-        <Text style={styles.emptySubtitle}>Shopping mode will be available in a future update</Text>
+        <Text style={styles.emptyTitle}>{t('shopping.comingSoon')}</Text>
+        <Text style={styles.emptySubtitle}>{t('shopping.description')}</Text>
       </View>
     </SafeAreaView>
   );
