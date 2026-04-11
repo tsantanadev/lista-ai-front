@@ -1,0 +1,133 @@
+{
+  "common": {
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "retry": "Erneut versuchen",
+    "error": "Fehler",
+    "or": "oder"
+  },
+  "auth": {
+    "continueWithGoogle": "Mit Google fortfahren",
+    "email": "E-Mail",
+    "emailPlaceholder": "ihre@email.de",
+    "password": "Passwort",
+    "passwordPlaceholder": "••••••••",
+    "login": {
+      "signIn": "Anmelden",
+      "forgotPassword": "Passwort vergessen?",
+      "noAccount": "Noch kein Konto?",
+      "signUp": "Registrieren",
+      "googleError": "Fehler bei der Anmeldung mit Google. Bitte erneut versuchen.",
+      "invalidCredentials": "Ungültige Anmeldedaten. Bitte prüfen und erneut versuchen."
+    },
+    "register": {
+      "fullName": "Vollständiger Name",
+      "namePlaceholder": "Max Mustermann",
+      "createAccount": "Konto erstellen",
+      "terms": "Durch die Registrierung stimmen Sie unseren ",
+      "termsLink": "Nutzungsbedingungen und Datenschutzrichtlinien",
+      "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+      "signIn": "Anmelden",
+      "googleError": "Fehler bei der Anmeldung mit Google. Bitte erneut versuchen.",
+      "createError": "Fehler beim Erstellen des Kontos. Bitte erneut versuchen."
+    }
+  },
+  "lists": {
+    "title": "Meine Listen",
+    "newList": "NEUE LISTE",
+    "empty": {
+      "title": "Noch keine Listen",
+      "hint": "Tippe auf NEUE LISTE, um deine erste Einkaufsliste zu erstellen"
+    },
+    "deleteDialog": {
+      "title": "Liste löschen",
+      "message": "\"{{name}}\" löschen? Dies kann nicht rückgängig gemacht werden.",
+      "confirm": "Löschen"
+    },
+    "addEditList": {
+      "editTitle": "Liste bearbeiten",
+      "newTitle": "Neue Liste",
+      "nameLabel": "LISTENNAME",
+      "namePlaceholder": "z.B. Wocheneinkauf"
+    },
+    "detail": {
+      "empty": {
+        "title": "Noch keine Artikel",
+        "hint": "Tippe auf HINZUFÜGEN, um deinen ersten Artikel hinzuzufügen"
+      },
+      "addItem": "HINZUFÜGEN",
+      "hideChecked": "Erledigte ausblenden",
+      "showChecked": "Erledigte einblenden"
+    },
+    "card": {
+      "noItems": "Keine Artikel",
+      "percentComplete": "{{percent}}% erledigt"
+    }
+  },
+  "items": {
+    "detailsTitle": "Details",
+    "done": "Fertig",
+    "descriptionPlaceholder": "Beschreibung",
+    "quantity": "Menge",
+    "unit": "Einheit",
+    "unitLabel": "EINHEIT"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": {
+      "title": "Sprache",
+      "sheetTitle": "Sprache auswählen"
+    },
+    "sync": {
+      "retrySync": "Synchronisation wiederholen"
+    },
+    "languages": {
+      "en": "English",
+      "pt-BR": "Português (BR)",
+      "es": "Español",
+      "fr": "Français",
+      "de": "Deutsch"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "defaultName": "Benutzer",
+    "profileInfo": "Profilinformationen",
+    "settingsLabel": "Einstellungen",
+    "info": {
+      "title": "Profil",
+      "name": "Name",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "phonePlaceholder": "+49 170 0000000",
+      "address": "Adresse",
+      "addressPlaceholder": "Musterstraße 1",
+      "password": "Passwort",
+      "signOut": "Abmelden",
+      "signOutTitle": "Abmelden",
+      "signOutMessage": "Möchten Sie sich wirklich abmelden?",
+      "signOutConfirm": "Abmelden",
+      "errorSaving": "Änderungen konnten nicht gespeichert werden."
+    }
+  },
+  "navigation": {
+    "lists": "Listen",
+    "shopping": "Einkaufen",
+    "profile": "Profil"
+  },
+  "sync": {
+    "error": "Synchronisierungsfehler — tippe zum Wiederholen",
+    "syncing_one": "Synchronisiere {{count}} Element…",
+    "syncing_other": "Synchronisiere {{count}} Elemente…"
+  },
+  "errorBoundary": {
+    "title": "Etwas ist schiefgelaufen",
+    "retry": "Erneut versuchen"
+  },
+  "shopping": {
+    "title": "Einkaufen",
+    "comingSoon": "Demnächst verfügbar",
+    "description": "Der Einkaufsmodus wird in einem zukünftigen Update verfügbar sein"
+  }
+}

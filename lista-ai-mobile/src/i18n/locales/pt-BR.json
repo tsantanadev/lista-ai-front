@@ -1,0 +1,133 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "retry": "Tentar novamente",
+    "error": "Erro",
+    "or": "ou"
+  },
+  "auth": {
+    "continueWithGoogle": "Continuar com Google",
+    "email": "E-mail",
+    "emailPlaceholder": "seu@email.com",
+    "password": "Senha",
+    "passwordPlaceholder": "••••••••",
+    "login": {
+      "signIn": "Entrar",
+      "forgotPassword": "Esqueceu a senha?",
+      "noAccount": "Não tem uma conta?",
+      "signUp": "Cadastre-se",
+      "googleError": "Erro ao entrar com Google. Tente novamente.",
+      "invalidCredentials": "Credenciais inválidas. Verifique e tente novamente."
+    },
+    "register": {
+      "fullName": "Nome completo",
+      "namePlaceholder": "João Silva",
+      "createAccount": "Criar conta",
+      "terms": "Ao se cadastrar, você concorda com nossos ",
+      "termsLink": "Termos e Política de Privacidade",
+      "alreadyHaveAccount": "Já tem uma conta?",
+      "signIn": "Entrar",
+      "googleError": "Erro ao entrar com Google. Tente novamente.",
+      "createError": "Erro ao criar conta. Tente novamente."
+    }
+  },
+  "lists": {
+    "title": "Minhas Listas",
+    "newList": "NOVA LISTA",
+    "empty": {
+      "title": "Nenhuma lista ainda",
+      "hint": "Toque em NOVA LISTA para criar sua primeira lista de compras"
+    },
+    "deleteDialog": {
+      "title": "Excluir Lista",
+      "message": "Excluir \"{{name}}\"? Isso não pode ser desfeito.",
+      "confirm": "Excluir"
+    },
+    "addEditList": {
+      "editTitle": "Editar Lista",
+      "newTitle": "Nova Lista",
+      "nameLabel": "NOME DA LISTA",
+      "namePlaceholder": "ex. Compras da Semana"
+    },
+    "detail": {
+      "empty": {
+        "title": "Nenhum item ainda",
+        "hint": "Toque em ADICIONAR para adicionar seu primeiro item"
+      },
+      "addItem": "ADICIONAR",
+      "hideChecked": "Ocultar marcados",
+      "showChecked": "Mostrar marcados"
+    },
+    "card": {
+      "noItems": "Sem itens",
+      "percentComplete": "{{percent}}% concluído"
+    }
+  },
+  "items": {
+    "detailsTitle": "Detalhes",
+    "done": "Concluído",
+    "descriptionPlaceholder": "Descrição",
+    "quantity": "Quantidade",
+    "unit": "Unidade",
+    "unitLabel": "UNIDADE"
+  },
+  "settings": {
+    "title": "Configurações",
+    "language": {
+      "title": "Idioma",
+      "sheetTitle": "Selecionar Idioma"
+    },
+    "sync": {
+      "retrySync": "Tentar Sincronizar"
+    },
+    "languages": {
+      "en": "English",
+      "pt-BR": "Português (BR)",
+      "es": "Español",
+      "fr": "Français",
+      "de": "Deutsch"
+    }
+  },
+  "profile": {
+    "title": "Perfil",
+    "defaultName": "Usuário",
+    "profileInfo": "Informações do perfil",
+    "settingsLabel": "Configurações",
+    "info": {
+      "title": "Perfil",
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "phonePlaceholder": "+55 11 99999-0000",
+      "address": "Endereço",
+      "addressPlaceholder": "Rua Example, 123",
+      "password": "Senha",
+      "signOut": "Sair da conta",
+      "signOutTitle": "Sair da conta",
+      "signOutMessage": "Tem certeza que deseja sair?",
+      "signOutConfirm": "Sair",
+      "errorSaving": "Não foi possível salvar as alterações."
+    }
+  },
+  "navigation": {
+    "lists": "Listas",
+    "shopping": "Compras",
+    "profile": "Perfil"
+  },
+  "sync": {
+    "error": "Erro de sincronização — toque para tentar novamente",
+    "syncing_one": "Sincronizando {{count}} item…",
+    "syncing_other": "Sincronizando {{count}} itens…"
+  },
+  "errorBoundary": {
+    "title": "Algo deu errado",
+    "retry": "Tentar novamente"
+  },
+  "shopping": {
+    "title": "Compras",
+    "comingSoon": "Em breve",
+    "description": "O modo de compras estará disponível em uma atualização futura"
+  }
+}
