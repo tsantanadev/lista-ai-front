@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Settings, UserCircle, ChevronRight } from 'lucide-react-native';
+import { Settings as SettingsIcon, UserCircle, ChevronRight } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../auth/store';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../../navigation/types';
 
 const C = {
@@ -29,7 +28,7 @@ function getInitials(name: string): string {
 export function Perfil() {
   const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const displayName  = user?.name ?? user?.email?.split('@')[0] ?? t('profile.defaultName');
   const displayEmail = user?.email ?? '';
@@ -72,7 +71,7 @@ export function Perfil() {
           onPress={() => navigation.navigate('Settings')}
         >
           <View style={s.menuIcon}>
-            <Settings size={20} color={C.primary} strokeWidth={1.6} />
+            <SettingsIcon size={20} color={C.primary} strokeWidth={1.6} />
           </View>
           <Text style={s.menuLabel}>{t('profile.settingsLabel')}</Text>
           <ChevronRight size={18} color={C.textSub} />
