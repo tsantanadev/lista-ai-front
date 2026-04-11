@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { saveAuth, loadAuth, clearAuth, StoredUser } from './storage';
 import { apiRegister, apiLogin, apiGoogleAuth, apiRefresh, apiLogout } from '../api/auth';
+import i18n from '../i18n';
 
 /** Decode a JWT payload without verifying the signature (safe for client-side display). */
 function decodeJwtPayload(token: string): Record<string, unknown> {
@@ -85,7 +86,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
       set({ isAuthenticated: true, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
     } catch (e: unknown) {
       const msg = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-        ?? 'Erro ao criar conta. Tente novamente.';
+        ?? i18n.t('auth.register.createError');
       set({ error: msg });
       throw e;
     }
@@ -106,7 +107,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
       set({ isAuthenticated: true, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
     } catch (e: unknown) {
       const msg = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-        ?? 'Credenciais inválidas. Verifique e tente novamente.';
+        ?? i18n.t('auth.login.invalidCredentials');
       set({ error: msg });
       throw e;
     }
@@ -127,7 +128,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
       set({ isAuthenticated: true, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
     } catch (e: unknown) {
       const msg = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-        ?? 'Erro ao entrar com Google. Tente novamente.';
+        ?? i18n.t('auth.login.googleError');
       set({ error: msg });
       throw e;
     }

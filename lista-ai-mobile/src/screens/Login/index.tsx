@@ -16,6 +16,7 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import { useAuthStore } from '../../auth/store';
 import type { LoginProps } from '../../navigation/types';
+import i18n from '../../i18n';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -53,7 +54,7 @@ export function Login({ navigation }: LoginProps) {
         loginGoogle(idToken).finally(() => setGoogleLoading(false));
       }
     } else if (response?.type === 'error') {
-      useAuthStore.setState({ error: 'Erro ao entrar com Google. Tente novamente.' });
+      useAuthStore.setState({ error: i18n.t('auth.login.googleError') });
     }
   }, [response]);
 
