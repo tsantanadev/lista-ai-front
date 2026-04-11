@@ -5,6 +5,7 @@ import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { List, ShoppingCart, User } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import type { RootTabParamList } from './types';
 import { ListsStack } from './ListsStack';
 import { Compras } from '../screens/Compras';
@@ -12,14 +13,15 @@ import { Perfil } from '../screens/Perfil';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
-const TAB_CONFIG: Record<keyof RootTabParamList, { icon: LucideIcon; label: string }> = {
-  ListsTab:   { icon: List,          label: 'Listas'  },
-  ComprasTab: { icon: ShoppingCart,  label: 'Compras' },
-  PerfilTab:  { icon: User,          label: 'Perfil'  },
+const TAB_CONFIG: Record<keyof RootTabParamList, { icon: LucideIcon; labelKey: string }> = {
+  ListsTab:   { icon: List,         labelKey: 'navigation.lists'    },
+  ComprasTab: { icon: ShoppingCart, labelKey: 'navigation.shopping' },
+  PerfilTab:  { icon: User,         labelKey: 'navigation.profile'  },
 };
 
 function IconBoxTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   return (
     <View style={[styles.bar, { paddingBottom: insets.bottom || 16 }]}>
@@ -27,7 +29,7 @@ function IconBoxTabBar({ state, navigation }: BottomTabBarProps) {
         const isFocused = state.index === index;
         const config = TAB_CONFIG[route.name as keyof RootTabParamList];
         if (!config) return null;
-        const { icon: Icon, label } = config;
+        const { icon: Icon, labelKey } = config;
 
         return (
           <TouchableOpacity
@@ -44,7 +46,7 @@ function IconBoxTabBar({ state, navigation }: BottomTabBarProps) {
               />
             </View>
             <Text style={[styles.label, isFocused && styles.labelActive]}>
-              {label}
+              {t(labelKey)}
             </Text>
           </TouchableOpacity>
         );

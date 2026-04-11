@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   Text,
@@ -23,6 +24,7 @@ function getStep(qty: number): number {
 export function AddEditItem({ route, navigation }: AddEditItemProps) {
   const { listId, remoteListId, itemId } = route.params ?? {};
   const isEditing = !!itemId;
+  const { t } = useTranslation();
 
   const { data: allItems = [] } = useItemsQuery(listId!);
   const existingItem = itemId ? allItems.find((i) => i.id === itemId) : undefined;
@@ -93,10 +95,10 @@ export function AddEditItem({ route, navigation }: AddEditItemProps) {
           <View style={styles.cameraBtn}>
             <Camera size={18} color="#1D9E75" strokeWidth={1.8} />
           </View>
-          <Text style={styles.headerTitle}>Detalhes</Text>
+          <Text style={styles.headerTitle}>{t('items.detailsTitle')}</Text>
           <TouchableOpacity onPress={handleSave} disabled={!description.trim()}>
             <Text style={[styles.concluido, !description.trim() && styles.concluidoDisabled]}>
-              Concluído
+              {t('items.done')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -114,7 +116,7 @@ export function AddEditItem({ route, navigation }: AddEditItemProps) {
               style={[styles.descInput, descFocused && styles.descInputFocused]}
               value={description}
               onChangeText={setDescription}
-              placeholder="Description"
+              placeholder={t('items.descriptionPlaceholder')}
               placeholderTextColor="#555"
               autoFocus
               onFocus={() => setDescFocused(true)}
@@ -125,8 +127,8 @@ export function AddEditItem({ route, navigation }: AddEditItemProps) {
             {/* Quantidade + Unidade */}
             <View>
               <View style={styles.qtyLabels}>
-                <Text style={[styles.fieldLabel, { flex: 1 }]}>Quantidade</Text>
-                <Text style={[styles.fieldLabel, { flex: 1 }]}>Unidade</Text>
+                <Text style={[styles.fieldLabel, { flex: 1 }]}>{t('items.quantity')}</Text>
+                <Text style={[styles.fieldLabel, { flex: 1 }]}>{t('items.unit')}</Text>
                 <View style={styles.btnSpacer} />
               </View>
               <View style={styles.qtyRow}>
@@ -179,7 +181,7 @@ export function AddEditItem({ route, navigation }: AddEditItemProps) {
 
             {/* UOM chips */}
             <View style={styles.chipsRow}>
-              <Text style={styles.chipsLabel}>UNIDADE</Text>
+              <Text style={styles.chipsLabel}>{t('items.unitLabel')}</Text>
               <View style={styles.chips}>
                 {UOM_CHIPS.map((chip) => {
                   const isActive = uom === chip;

@@ -24,9 +24,10 @@ export type AuthStackParamList = {
 
 // ── Root stack (wraps tabs + modal-style screens) ────────────────────────────
 export type RootStackParamList = {
-  Auth:      NavigatorScreenParams<AuthStackParamList>;
-  MainTabs:  NavigatorScreenParams<RootTabParamList>;
+  Auth:       NavigatorScreenParams<AuthStackParamList>;
+  MainTabs:   NavigatorScreenParams<RootTabParamList>;
   PerfilInfo: undefined;
+  Settings:   undefined;
 };
 
 // ── Typed screen props ────────────────────────────────────────────────────────

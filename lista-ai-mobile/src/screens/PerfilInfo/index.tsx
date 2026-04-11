@@ -14,6 +14,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft, Camera, Pencil, Lock, Trash2 } from 'lucide-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../auth/store';
 import { saveAuth, loadAuth } from '../../auth/storage';
 import type { PerfilInfoProps } from '../../navigation/types';
@@ -42,6 +43,7 @@ function getInitials(name: string): string {
 }
 
 export function PerfilInfo({ navigation }: PerfilInfoProps) {
+  const { t } = useTranslation();
   const { user, logout } = useAuthStore();
 
   const [name, setName]       = useState(user?.name ?? '');
@@ -74,7 +76,7 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
       await AsyncStorage.setItem(LOCAL_PROFILE_KEY, JSON.stringify(local));
       navigation.goBack();
     } catch {
-      Alert.alert('Erro', 'Não foi possível salvar as alterações.');
+      Alert.alert(t('common.error'), t('profile.info.errorSaving'));
     } finally {
       setSaving(false);
     }
@@ -82,11 +84,11 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
 
   function confirmLogout() {
     Alert.alert(
-      'Sair da conta',
-      'Tem certeza que deseja sair?',
+      t('profile.info.signOutTitle'),
+      t('profile.info.signOutMessage'),
       [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Sair', style: 'destructive', onPress: () => logout() },
+        { text: t('common.cancel'), style: 'cancel' },
+        { text: t('profile.info.signOutConfirm'), style: 'destructive', onPress: () => logout() },
       ],
     );
   }
@@ -104,11 +106,11 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
           <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8}>
             <ChevronLeft size={26} color={C.text} />
           </TouchableOpacity>
-          <Text style={s.headerTitle}>Perfil</Text>
+          <Text style={s.headerTitle}>{t('profile.info.title')}</Text>
           <TouchableOpacity onPress={handleSave} disabled={saving}>
             {saving
               ? <ActivityIndicator size="small" color={C.primary} />
-              : <Text style={s.saveBtn}>Salvar</Text>}
+              : <Text style={s.saveBtn}>{t('common.save')}</Text>}
           </TouchableOpacity>
         </View>
 
@@ -131,7 +133,7 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
           <View style={s.fields}>
             {/* Name */}
             <View style={s.fieldRow}>
-              <Text style={s.fieldLabel}>Nome</Text>
+              <Text style={s.fieldLabel}>{t('profile.info.name')}</Text>
               <View style={s.fieldInput}>
                 <TextInput
                   style={s.fieldText}
@@ -148,7 +150,7 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
 
             {/* Email (read-only) */}
             <View style={s.fieldRow}>
-              <Text style={s.fieldLabel}>E-mail</Text>
+              <Text style={s.fieldLabel}>{t('profile.info.email')}</Text>
               <View style={s.fieldInput}>
                 <TextInput
                   style={[s.fieldText, s.fieldTextMuted]}
@@ -164,13 +166,13 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
 
             {/* Phone */}
             <View style={s.fieldRow}>
-              <Text style={s.fieldLabel}>Telefone</Text>
+              <Text style={s.fieldLabel}>{t('profile.info.phone')}</Text>
               <View style={s.fieldInput}>
                 <TextInput
                   style={s.fieldText}
                   value={phone}
                   onChangeText={setPhone}
-                  placeholder="+55 11 99999-0000"
+                  placeholder={t('profile.info.phonePlaceholder')}
                   placeholderTextColor={C.textSub}
                   keyboardType="phone-pad"
                 />
@@ -182,13 +184,13 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
 
             {/* Address */}
             <View style={s.fieldRow}>
-              <Text style={s.fieldLabel}>Endereço</Text>
+              <Text style={s.fieldLabel}>{t('profile.info.address')}</Text>
               <View style={s.fieldInput}>
                 <TextInput
                   style={s.fieldText}
                   value={address}
                   onChangeText={setAddress}
-                  placeholder="Rua Example, 123"
+                  placeholder={t('profile.info.addressPlaceholder')}
                   placeholderTextColor={C.textSub}
                 />
                 <Pencil size={16} color={C.textSub} />
@@ -199,7 +201,7 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
 
             {/* Password (display-only) */}
             <View style={s.fieldRow}>
-              <Text style={s.fieldLabel}>Senha</Text>
+              <Text style={s.fieldLabel}>{t('profile.info.password')}</Text>
               <View style={s.fieldInput}>
                 <TextInput
                   style={[s.fieldText, s.fieldTextMuted]}
@@ -215,7 +217,7 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
           {/* Sign out */}
           <TouchableOpacity style={s.deleteBtn} onPress={confirmLogout} activeOpacity={0.8}>
             <Trash2 size={16} color={C.danger} />
-            <Text style={s.deleteText}>Sair da conta</Text>
+            <Text style={s.deleteText}>{t('profile.info.signOut')}</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>

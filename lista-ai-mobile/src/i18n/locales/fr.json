@@ -1,0 +1,133 @@
+{
+  "common": {
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "retry": "Réessayer",
+    "error": "Erreur",
+    "or": "ou"
+  },
+  "auth": {
+    "continueWithGoogle": "Continuer avec Google",
+    "email": "E-mail",
+    "emailPlaceholder": "votre@email.com",
+    "password": "Mot de passe",
+    "passwordPlaceholder": "••••••••",
+    "login": {
+      "signIn": "Se connecter",
+      "forgotPassword": "Mot de passe oublié ?",
+      "noAccount": "Pas encore de compte ?",
+      "signUp": "S'inscrire",
+      "googleError": "Erreur lors de la connexion avec Google. Veuillez réessayer.",
+      "invalidCredentials": "Identifiants invalides. Vérifiez et réessayez."
+    },
+    "register": {
+      "fullName": "Nom complet",
+      "namePlaceholder": "Jean Dupont",
+      "createAccount": "Créer un compte",
+      "terms": "En vous inscrivant, vous acceptez nos ",
+      "termsLink": "Conditions et Politique de confidentialité",
+      "alreadyHaveAccount": "Vous avez déjà un compte ?",
+      "signIn": "Se connecter",
+      "googleError": "Erreur lors de la connexion avec Google. Veuillez réessayer.",
+      "createError": "Erreur lors de la création du compte. Veuillez réessayer."
+    }
+  },
+  "lists": {
+    "title": "Mes Listes",
+    "newList": "NOUVELLE LISTE",
+    "empty": {
+      "title": "Aucune liste",
+      "hint": "Appuyez sur NOUVELLE LISTE pour créer votre première liste de courses"
+    },
+    "deleteDialog": {
+      "title": "Supprimer la liste",
+      "message": "Supprimer \"{{name}}\" ? Cette action est irréversible.",
+      "confirm": "Supprimer"
+    },
+    "addEditList": {
+      "editTitle": "Modifier la liste",
+      "newTitle": "Nouvelle liste",
+      "nameLabel": "NOM DE LA LISTE",
+      "namePlaceholder": "ex. Courses de la semaine"
+    },
+    "detail": {
+      "empty": {
+        "title": "Aucun article",
+        "hint": "Appuyez sur AJOUTER pour ajouter votre premier article"
+      },
+      "addItem": "AJOUTER",
+      "hideChecked": "Masquer les éléments cochés",
+      "showChecked": "Afficher les éléments cochés"
+    },
+    "card": {
+      "noItems": "Aucun article",
+      "percentComplete": "{{percent}}% terminé"
+    }
+  },
+  "items": {
+    "detailsTitle": "Détails",
+    "done": "Terminé",
+    "descriptionPlaceholder": "Description",
+    "quantity": "Quantité",
+    "unit": "Unité",
+    "unitLabel": "UNITÉ"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": {
+      "title": "Langue",
+      "sheetTitle": "Choisir la langue"
+    },
+    "sync": {
+      "retrySync": "Relancer la synchronisation"
+    },
+    "languages": {
+      "en": "English",
+      "pt-BR": "Português (BR)",
+      "es": "Español",
+      "fr": "Français",
+      "de": "Deutsch"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "defaultName": "Utilisateur",
+    "profileInfo": "Informations du profil",
+    "settingsLabel": "Paramètres",
+    "info": {
+      "title": "Profil",
+      "name": "Nom",
+      "email": "E-mail",
+      "phone": "Téléphone",
+      "phonePlaceholder": "+33 6 00 00 00 00",
+      "address": "Adresse",
+      "addressPlaceholder": "1 Rue Exemple",
+      "password": "Mot de passe",
+      "signOut": "Se déconnecter",
+      "signOutTitle": "Se déconnecter",
+      "signOutMessage": "Êtes-vous sûr de vouloir vous déconnecter ?",
+      "signOutConfirm": "Se déconnecter",
+      "errorSaving": "Impossible d'enregistrer les modifications."
+    }
+  },
+  "navigation": {
+    "lists": "Listes",
+    "shopping": "Courses",
+    "profile": "Profil"
+  },
+  "sync": {
+    "error": "Erreur de synchronisation — appuyez pour réessayer",
+    "syncing_one": "Synchronisation de {{count}} élément…",
+    "syncing_other": "Synchronisation de {{count}} éléments…"
+  },
+  "errorBoundary": {
+    "title": "Une erreur s'est produite",
+    "retry": "Réessayer"
+  },
+  "shopping": {
+    "title": "Courses",
+    "comingSoon": "Bientôt disponible",
+    "description": "Le mode courses sera disponible dans une prochaine mise à jour"
+  }
+}

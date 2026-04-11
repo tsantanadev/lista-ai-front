@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Settings, UserCircle, ChevronRight } from 'lucide-react-native';
+import { Settings as SettingsIcon, UserCircle, ChevronRight } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../auth/store';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../../navigation/types';
 
 const C = {
@@ -26,17 +26,18 @@ function getInitials(name: string): string {
 }
 
 export function Perfil() {
+  const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const displayName  = user?.name ?? user?.email?.split('@')[0] ?? 'Usuário';
+  const displayName  = user?.name ?? user?.email?.split('@')[0] ?? t('profile.defaultName');
   const displayEmail = user?.email ?? '';
 
   return (
     <SafeAreaView style={s.safe}>
       {/* Header */}
       <View style={s.header}>
-        <Text style={s.title}>Perfil</Text>
+        <Text style={s.title}>{t('profile.title')}</Text>
       </View>
 
       {/* Avatar */}
@@ -58,17 +59,21 @@ export function Perfil() {
           <View style={s.menuIcon}>
             <UserCircle size={20} color={C.primary} strokeWidth={1.6} />
           </View>
-          <Text style={s.menuLabel}>Informações do perfil</Text>
+          <Text style={s.menuLabel}>{t('profile.profileInfo')}</Text>
           <ChevronRight size={18} color={C.textSub} />
         </TouchableOpacity>
 
         <View style={s.separator} />
 
-        <TouchableOpacity style={s.menuRow} activeOpacity={0.75}>
+        <TouchableOpacity
+          style={s.menuRow}
+          activeOpacity={0.75}
+          onPress={() => navigation.navigate('Settings')}
+        >
           <View style={s.menuIcon}>
-            <Settings size={20} color={C.primary} strokeWidth={1.6} />
+            <SettingsIcon size={20} color={C.primary} strokeWidth={1.6} />
           </View>
-          <Text style={s.menuLabel}>Configurações</Text>
+          <Text style={s.menuLabel}>{t('profile.settingsLabel')}</Text>
           <ChevronRight size={18} color={C.textSub} />
         </TouchableOpacity>
       </View>

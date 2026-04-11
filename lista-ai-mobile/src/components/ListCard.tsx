@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import type { List } from '../types/list';
 import { useItemsQuery } from '../hooks/useItems';
+import { useTranslation } from 'react-i18next';
 
 interface ListCardProps {
   list: List;
@@ -15,6 +16,7 @@ export function ListCard({ list, onPress, onDelete }: ListCardProps) {
   const checked = allItems.filter((i) => i.checked).length;
   const progress = total > 0 ? checked / total : 0;
   const percent = Math.round(progress * 100);
+  const { t } = useTranslation();
 
   return (
     <TouchableOpacity
@@ -31,7 +33,7 @@ export function ListCard({ list, onPress, onDelete }: ListCardProps) {
         <View style={[styles.progressFill, { width: `${progress * 100}%` as any }]} />
       </View>
       <Text style={styles.percent}>
-        {total === 0 ? 'No items' : `${percent}% complete`}
+        {total === 0 ? t('lists.card.noItems') : t('lists.card.percentComplete', { percent })}
       </Text>
     </TouchableOpacity>
   );

@@ -1,0 +1,133 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "retry": "Retry",
+    "error": "Error",
+    "or": "or"
+  },
+  "auth": {
+    "continueWithGoogle": "Continue with Google",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "login": {
+      "signIn": "Sign In",
+      "forgotPassword": "Forgot your password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "googleError": "Error signing in with Google. Please try again.",
+      "invalidCredentials": "Invalid credentials. Please check and try again."
+    },
+    "register": {
+      "fullName": "Full name",
+      "namePlaceholder": "John Smith",
+      "createAccount": "Create account",
+      "terms": "By signing up, you agree to our ",
+      "termsLink": "Terms and Privacy Policy",
+      "alreadyHaveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "googleError": "Error signing in with Google. Please try again.",
+      "createError": "Error creating account. Please try again."
+    }
+  },
+  "lists": {
+    "title": "My Lists",
+    "newList": "NEW LIST",
+    "empty": {
+      "title": "No lists yet",
+      "hint": "Tap NEW LIST to create your first shopping list"
+    },
+    "deleteDialog": {
+      "title": "Delete List",
+      "message": "Delete \"{{name}}\"? This cannot be undone.",
+      "confirm": "Delete"
+    },
+    "addEditList": {
+      "editTitle": "Edit List",
+      "newTitle": "New List",
+      "nameLabel": "LIST NAME",
+      "namePlaceholder": "e.g. Weekly Groceries"
+    },
+    "detail": {
+      "empty": {
+        "title": "No items yet",
+        "hint": "Tap ADD ITEM to add your first item"
+      },
+      "addItem": "ADD ITEM",
+      "hideChecked": "Hide checked items",
+      "showChecked": "Show checked items"
+    },
+    "card": {
+      "noItems": "No items",
+      "percentComplete": "{{percent}}% complete"
+    }
+  },
+  "items": {
+    "detailsTitle": "Details",
+    "done": "Done",
+    "descriptionPlaceholder": "Description",
+    "quantity": "Quantity",
+    "unit": "Unit",
+    "unitLabel": "UNIT"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": {
+      "title": "Language",
+      "sheetTitle": "Select Language"
+    },
+    "sync": {
+      "retrySync": "Retry Sync"
+    },
+    "languages": {
+      "en": "English",
+      "pt-BR": "Português (BR)",
+      "es": "Español",
+      "fr": "Français",
+      "de": "Deutsch"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "defaultName": "User",
+    "profileInfo": "Profile info",
+    "settingsLabel": "Settings",
+    "info": {
+      "title": "Profile",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "phonePlaceholder": "+1 555 000-0000",
+      "address": "Address",
+      "addressPlaceholder": "123 Example St",
+      "password": "Password",
+      "signOut": "Sign out",
+      "signOutTitle": "Sign out",
+      "signOutMessage": "Are you sure you want to sign out?",
+      "signOutConfirm": "Sign out",
+      "errorSaving": "Could not save changes."
+    }
+  },
+  "navigation": {
+    "lists": "Lists",
+    "shopping": "Shopping",
+    "profile": "Profile"
+  },
+  "sync": {
+    "error": "Sync error — tap to retry",
+    "syncing_one": "Syncing {{count}} item…",
+    "syncing_other": "Syncing {{count}} items…"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "retry": "Retry"
+  },
+  "shopping": {
+    "title": "Shopping",
+    "comingSoon": "Coming soon",
+    "description": "Shopping mode will be available in a future update"
+  }
+}
