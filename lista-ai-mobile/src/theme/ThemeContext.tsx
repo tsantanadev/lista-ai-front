@@ -23,7 +23,6 @@ const ThemeContext = createContext<ThemeContextValue>({
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const deviceScheme = useColorScheme();
   const [preference, setPreferenceState] = useState<ThemePreference>('system');
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
@@ -31,8 +30,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         if (stored === 'light' || stored === 'dark' || stored === 'system') {
           setPreferenceState(stored);
         }
-      })
-      .finally(() => setReady(true));
+      });
   }, []);
 
   const setPreference = async (p: ThemePreference) => {
@@ -43,9 +41,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const resolvedScheme =
     preference === 'system' ? (deviceScheme ?? 'dark') : preference;
   const theme = resolvedScheme === 'dark' ? darkColors : lightColors;
-
-  // Don't render until preference is loaded to avoid a flash
-  if (!ready) return null;
 
   return (
     <ThemeContext.Provider value={{ theme, preference, setPreference }}>
