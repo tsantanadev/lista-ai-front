@@ -75,6 +75,16 @@
   },
   "settings": {
     "title": "Einstellungen",
+    "appearance": {
+      "title": "Erscheinungsbild",
+      "theme": "Design",
+      "themeSubtitle": "Wähle das Aussehen der App"
+    },
+    "theme": {
+      "system": "System",
+      "dark": "Dunkel",
+      "light": "Hell"
+    },
     "language": {
       "title": "Sprache",
       "sheetTitle": "Sprache auswählen"

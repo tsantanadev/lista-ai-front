@@ -75,6 +75,16 @@
   },
   "settings": {
     "title": "Configurações",
+    "appearance": {
+      "title": "Aparência",
+      "theme": "Tema",
+      "themeSubtitle": "Escolha como o app aparece"
+    },
+    "theme": {
+      "system": "Sistema",
+      "dark": "Escuro",
+      "light": "Claro"
+    },
     "language": {
       "title": "Idioma",
       "sheetTitle": "Selecionar Idioma"

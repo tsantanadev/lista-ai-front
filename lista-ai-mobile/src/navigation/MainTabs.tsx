@@ -10,6 +10,7 @@ import type { RootTabParamList } from './types';
 import { ListsStack } from './ListsStack';
 import { Compras } from '../screens/Compras';
 import { Perfil } from '../screens/Perfil';
+import { useTheme } from '../theme/ThemeContext';
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
@@ -22,9 +23,37 @@ const TAB_CONFIG: Record<keyof RootTabParamList, { icon: LucideIcon; labelKey: s
 function IconBoxTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const { theme } = useTheme();
+
+  const s = StyleSheet.create({
+    bar: {
+      flexDirection: 'row',
+      backgroundColor: theme.surfaceElevated,
+      borderTopWidth: 1,
+      borderTopColor: theme.borderSubtle,
+      paddingTop: 12,
+      paddingHorizontal: 8,
+      paddingBottom: insets.bottom || 16,
+    },
+    tab: { flex: 1, alignItems: 'center', gap: 6 },
+    iconBox: {
+      width: 52,
+      height: 52,
+      borderRadius: 14,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    iconBoxActive: {
+      backgroundColor: `${theme.primary}26`,
+      borderWidth: 1.5,
+      borderColor: theme.primary,
+    },
+    label:       { color: theme.neutral, fontSize: 11, fontWeight: '500' },
+    labelActive: { color: theme.textPrimary, fontWeight: '700' },
+  });
 
   return (
-    <View style={[styles.bar, { paddingBottom: insets.bottom || 16 }]}>
+    <View style={s.bar}>
       {state.routes.map((route, index) => {
         const isFocused = state.index === index;
         const config = TAB_CONFIG[route.name as keyof RootTabParamList];
@@ -34,20 +63,14 @@ function IconBoxTabBar({ state, navigation }: BottomTabBarProps) {
         return (
           <TouchableOpacity
             key={route.key}
-            style={styles.tab}
+            style={s.tab}
             onPress={() => { if (!isFocused) navigation.navigate(route.name); }}
             activeOpacity={0.75}
           >
-            <View style={[styles.iconBox, isFocused && styles.iconBoxActive]}>
-              <Icon
-                size={22}
-                color={isFocused ? '#1D9E75' : '#888780'}
-                strokeWidth={1.8}
-              />
+            <View style={[s.iconBox, isFocused && s.iconBoxActive]}>
+              <Icon size={22} color={isFocused ? theme.primary : theme.neutral} strokeWidth={1.8} />
             </View>
-            <Text style={[styles.label, isFocused && styles.labelActive]}>
-              {t(labelKey)}
-            </Text>
+            <Text style={[s.label, isFocused && s.labelActive]}>{t(labelKey)}</Text>
           </TouchableOpacity>
         );
       })}
@@ -67,40 +90,3 @@ export function MainTabs() {
     </Tab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  bar: {
-    flexDirection: 'row',
-    backgroundColor: '#161A18',
-    borderTopWidth: 1,
-    borderTopColor: '#1A2420',
-    paddingTop: 12,
-    paddingHorizontal: 8,
-  },
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 6,
-  },
-  iconBox: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconBoxActive: {
-    backgroundColor: 'rgba(29,158,117,0.15)',
-    borderWidth: 1.5,
-    borderColor: '#1D9E75',
-  },
-  label: {
-    color: '#888780',
-    fontSize: 11,
-    fontWeight: '500',
-  },
-  labelActive: {
-    color: '#EEF2F0',
-    fontWeight: '700',
-  },
-});

@@ -9,7 +9,8 @@ import { runMigrations } from './src/db/migrate';
 import { useConnectivity } from './src/hooks/useConnectivity';
 import { useAuthStore } from './src/auth/store';
 import { useStore } from './src/store';
-import './src/i18n'; // initializes i18next synchronously at module load
+import { ThemeProvider } from './src/theme/ThemeContext';
+import './src/i18n';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -73,10 +74,12 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
-        <AppContent />
-      </QueryClientProvider>
-    </SafeAreaProvider>
+    <ThemeProvider>
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <AppContent />
+        </QueryClientProvider>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 }

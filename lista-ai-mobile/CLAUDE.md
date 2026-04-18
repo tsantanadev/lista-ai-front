@@ -112,14 +112,18 @@ Endpoints used: `GET/POST/DELETE /v1/lists`, `GET/POST/PUT/DELETE /v1/lists/{id}
 
 ## Design Tokens
 
-| Token | Value |
-|---|---|
-| Background | `#09090B` |
-| Card | `#18181B` |
-| Primary | `#3B82F6` |
-| Success (checked) | `#22C55E` |
-| Destructive | `#EF4444` |
-| Text primary | `#FAFAFA` |
-| Text secondary | `#A1A1AA` |
-| Text muted | `#71717A` |
-| Border | `#27272A` |
+Tokens are defined in `src/theme/colors.ts`. The app ships two palettes (`darkColors`, `lightColors`) consumed via `useTheme()`.
+
+| Token | Dark | Light |
+| ----- | ---- | ----- |
+| background | `#111210` | `#F4F7F5` |
+| surface | `#1A1C1A` | `#FFFFFF` |
+| surfaceElevated | `#161A18` | `#F0F5F2` |
+| border | `#0F2E28` | `#D0E8E0` |
+| borderSubtle | `#1A2420` | `#D8EBE3` |
+| progressTrack | `#222420` | `#E5EDE9` |
+| primary | `#1D9E75` | `#1D9E75` |
+| accent | `#EF9F27` | `#EF9F27` |
+| neutral | `#888780` | `#888780` |
+| textPrimary | `#EEF2F0` | `#1A1C1A` |
+| destructive | `#EF4444` | `#EF4444` |

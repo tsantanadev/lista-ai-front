@@ -4,29 +4,47 @@ import { RefreshCw, AlertCircle } from 'lucide-react-native';
 import { useSync } from '../hooks/useSync';
 import { executeSync } from '../sync/executor';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../theme/ThemeContext';
 
 export function SyncStatusBar() {
   const { pendingCount, lastSyncError } = useSync();
+  const { t } = useTranslation();
+  const { theme } = useTheme();
 
   if (!lastSyncError && pendingCount === 0) return null;
 
   const isError = !!lastSyncError;
-  const { t } = useTranslation();
 
   const handleRetry = async () => {
     try { await executeSync(); } catch { /* handled by sync layer */ }
   };
 
+  const s = StyleSheet.create({
+    bar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      gap: 6,
+      backgroundColor: theme.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.border,
+    },
+    barError: { backgroundColor: theme.destructive },
+    text: { color: theme.neutral, fontSize: 12, fontWeight: '500' },
+  });
+
   return (
     <TouchableOpacity
-      style={[styles.bar, isError ? styles.barError : styles.barPending]}
+      style={[s.bar, isError && s.barError]}
       onPress={isError ? handleRetry : undefined}
       activeOpacity={isError ? 0.8 : 1}
     >
       {isError
-        ? <AlertCircle size={14} color="#EEF2F0" strokeWidth={2} />
-        : <RefreshCw size={14} color="#EEF2F0" strokeWidth={2} />}
-      <Text style={styles.text}>
+        ? <AlertCircle size={14} color={theme.textPrimary} strokeWidth={2} />
+        : <RefreshCw size={14} color={theme.textPrimary} strokeWidth={2} />}
+      <Text style={s.text}>
         {isError
           ? t('sync.error')
           : t('sync.syncing', { count: pendingCount })}
@@ -34,20 +52,3 @@ export function SyncStatusBar() {
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  bar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    gap: 6,
-    backgroundColor: '#1A1C1A',
-    borderBottomWidth: 1,
-    borderBottomColor: '#0F2E28',
-  },
-  barPending: { backgroundColor: '#1A1C1A' },
-  barError:   { backgroundColor: '#EF4444' },
-  text: { color: '#888780', fontSize: 12, fontWeight: '500' },
-});

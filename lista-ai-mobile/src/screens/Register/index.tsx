@@ -18,18 +18,9 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../auth/store';
 import type { RegisterProps } from '../../navigation/types';
 import i18n from '../../i18n';
+import { useTheme } from '../../theme/ThemeContext';
 
 WebBrowser.maybeCompleteAuthSession();
-
-const C = {
-  bg:      '#111210',
-  surface: '#161A18',
-  border:  '#1A2420',
-  primary: '#1D9E75',
-  text:    '#EEF2F0',
-  textSub: '#888780',
-  danger:  '#EF4444',
-} as const;
 
 export function Register({ navigation }: RegisterProps) {
   const [name, setName]           = useState('');
@@ -38,6 +29,7 @@ export function Register({ navigation }: RegisterProps) {
   const [showPass, setShowPass]   = useState(false);
   const [loading, setLoading]     = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const { theme } = useTheme();
 
   const { register, loginGoogle, error, clearError } = useAuthStore();
   const { t } = useTranslation();
@@ -73,41 +65,73 @@ export function Register({ navigation }: RegisterProps) {
 
   const canSubmit = name.trim().length > 0 && email.trim().length > 0 && password.length >= 6;
 
+  const s = StyleSheet.create({
+    safe:   { flex: 1, backgroundColor: theme.background },
+    flex:   { flex: 1 },
+    scroll: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 48, paddingBottom: 32 },
+    logoArea: { alignItems: 'center', marginBottom: 40 },
+    logoBox: {
+      width: 72, height: 72, borderRadius: 20,
+      backgroundColor: `${theme.primary}1E`,
+      borderWidth: 1.5, borderColor: `${theme.primary}4D`,
+      alignItems: 'center', justifyContent: 'center',
+      marginBottom: 12,
+    },
+    appName: { color: theme.textPrimary, fontSize: 26, fontWeight: '700' },
+    errorBanner: {
+      backgroundColor: `${theme.destructive}1E`,
+      borderWidth: 1, borderColor: `${theme.destructive}4D`,
+      borderRadius: 10, padding: 12, marginBottom: 16,
+    },
+    errorText: { color: theme.destructive, fontSize: 13, textAlign: 'center' },
+    googleBtn: {
+      flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+      borderWidth: 1.5, borderColor: theme.borderSubtle, borderRadius: 12,
+      paddingVertical: 14, gap: 10, backgroundColor: theme.surfaceElevated,
+    },
+    googleG:     { color: theme.textPrimary, fontSize: 16, fontWeight: '700' },
+    googleLabel: { color: theme.textPrimary, fontSize: 15, fontWeight: '500' },
+    divider:     { flexDirection: 'row', alignItems: 'center', marginVertical: 24 },
+    dividerLine: { flex: 1, height: 1, backgroundColor: theme.borderSubtle },
+    dividerText: { color: theme.neutral, fontSize: 12, marginHorizontal: 12 },
+    label: { color: theme.neutral, fontSize: 13, fontWeight: '500', marginBottom: 8 },
+    inputRow: {
+      flexDirection: 'row', alignItems: 'center',
+      backgroundColor: theme.surfaceElevated, borderWidth: 1.5, borderColor: theme.borderSubtle,
+      borderRadius: 12, paddingHorizontal: 14, paddingVertical: 14, gap: 10,
+    },
+    input: { flex: 1, color: theme.textPrimary, fontSize: 15 },
+    primaryBtn: {
+      backgroundColor: theme.primary, borderRadius: 12,
+      paddingVertical: 16, alignItems: 'center', marginTop: 28,
+    },
+    primaryBtnDisabled: { opacity: 0.5 },
+    primaryBtnText:     { color: '#fff', fontSize: 16, fontWeight: '700' },
+    terms: { color: theme.neutral, fontSize: 12, textAlign: 'center', marginTop: 16, lineHeight: 18 },
+    termsLink: { color: theme.primary },
+    linkRow:   { flexDirection: 'row', justifyContent: 'center' },
+    mutedText: { color: theme.neutral, fontSize: 13 },
+    link:      { color: theme.primary, fontSize: 13, fontWeight: '600' },
+  });
+
   return (
     <SafeAreaView style={s.safe}>
-      <KeyboardAvoidingView
-        style={s.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView
-          contentContainerStyle={s.scroll}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Logo */}
+      <KeyboardAvoidingView style={s.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView contentContainerStyle={s.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
           <View style={s.logoArea}>
             <View style={s.logoBox}>
-              <ShoppingBag size={36} color={C.primary} strokeWidth={1.6} />
+              <ShoppingBag size={36} color={theme.primary} strokeWidth={1.6} />
             </View>
             <Text style={s.appName}>Lista AI</Text>
           </View>
-
-          {/* Error banner */}
           {error ? (
             <TouchableOpacity style={s.errorBanner} onPress={clearError}>
               <Text style={s.errorText}>{error}</Text>
             </TouchableOpacity>
           ) : null}
-
-          {/* Google button */}
-          <TouchableOpacity
-            style={s.googleBtn}
-            onPress={() => promptAsync()}
-            disabled={googleLoading}
-            activeOpacity={0.8}
-          >
+          <TouchableOpacity style={s.googleBtn} onPress={() => promptAsync()} disabled={googleLoading} activeOpacity={0.8}>
             {googleLoading ? (
-              <ActivityIndicator size="small" color={C.text} />
+              <ActivityIndicator size="small" color={theme.textPrimary} />
             ) : (
               <>
                 <Text style={s.googleG}>G</Text>
@@ -115,86 +139,36 @@ export function Register({ navigation }: RegisterProps) {
               </>
             )}
           </TouchableOpacity>
-
-          {/* Divider */}
           <View style={s.divider}>
             <View style={s.dividerLine} />
             <Text style={s.dividerText}>{t('common.or')}</Text>
             <View style={s.dividerLine} />
           </View>
-
-          {/* Name */}
           <Text style={s.label}>{t('auth.register.fullName')}</Text>
           <View style={s.inputRow}>
-            <User size={16} color={C.textSub} />
-            <TextInput
-              style={s.input}
-              placeholder={t('auth.register.namePlaceholder')}
-              placeholderTextColor={C.textSub}
-              value={name}
-              onChangeText={setName}
-              autoCapitalize="words"
-              onFocus={clearError}
-            />
+            <User size={16} color={theme.neutral} />
+            <TextInput style={s.input} placeholder={t('auth.register.namePlaceholder')} placeholderTextColor={theme.neutral} value={name} onChangeText={setName} autoCapitalize="words" onFocus={clearError} />
           </View>
-
-          {/* Email */}
           <Text style={[s.label, { marginTop: 16 }]}>{t('auth.email')}</Text>
           <View style={s.inputRow}>
-            <Mail size={16} color={C.textSub} />
-            <TextInput
-              style={s.input}
-              placeholder={t('auth.emailPlaceholder')}
-              placeholderTextColor={C.textSub}
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              autoComplete="email"
-              onFocus={clearError}
-            />
+            <Mail size={16} color={theme.neutral} />
+            <TextInput style={s.input} placeholder={t('auth.emailPlaceholder')} placeholderTextColor={theme.neutral} value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" autoComplete="email" onFocus={clearError} />
           </View>
-
-          {/* Password */}
           <Text style={[s.label, { marginTop: 16 }]}>{t('auth.password')}</Text>
           <View style={s.inputRow}>
-            <Lock size={16} color={C.textSub} />
-            <TextInput
-              style={s.input}
-              placeholder={t('auth.passwordPlaceholder')}
-              placeholderTextColor={C.textSub}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPass}
-              autoComplete="new-password"
-              onFocus={clearError}
-            />
+            <Lock size={16} color={theme.neutral} />
+            <TextInput style={s.input} placeholder={t('auth.passwordPlaceholder')} placeholderTextColor={theme.neutral} value={password} onChangeText={setPassword} secureTextEntry={!showPass} autoComplete="new-password" onFocus={clearError} />
             <TouchableOpacity onPress={() => setShowPass((v) => !v)}>
-              {showPass
-                ? <Eye size={18} color={C.textSub} />
-                : <EyeOff size={18} color={C.textSub} />}
+              {showPass ? <Eye size={18} color={theme.neutral} /> : <EyeOff size={18} color={theme.neutral} />}
             </TouchableOpacity>
           </View>
-
-          {/* Submit */}
-          <TouchableOpacity
-            style={[s.primaryBtn, !canSubmit && s.primaryBtnDisabled]}
-            onPress={handleRegister}
-            disabled={loading || !canSubmit}
-            activeOpacity={0.85}
-          >
-            {loading
-              ? <ActivityIndicator color="#fff" />
-              : <Text style={s.primaryBtnText}>{t('auth.register.createAccount')}</Text>}
+          <TouchableOpacity style={[s.primaryBtn, !canSubmit && s.primaryBtnDisabled]} onPress={handleRegister} disabled={loading || !canSubmit} activeOpacity={0.85}>
+            {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.primaryBtnText}>{t('auth.register.createAccount')}</Text>}
           </TouchableOpacity>
-
-          {/* Terms */}
           <Text style={s.terms}>
             {t('auth.register.terms')}{' '}
             <Text style={s.termsLink}>{t('auth.register.termsLink')}</Text>
           </Text>
-
-          {/* Login link */}
           <View style={[s.linkRow, { marginTop: 12 }]}>
             <Text style={s.mutedText}>{t('auth.register.alreadyHaveAccount')} </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -206,63 +180,3 @@ export function Register({ navigation }: RegisterProps) {
     </SafeAreaView>
   );
 }
-
-const s = StyleSheet.create({
-  safe:   { flex: 1, backgroundColor: C.bg },
-  flex:   { flex: 1 },
-  scroll: { flexGrow: 1, paddingHorizontal: 24, paddingTop: 48, paddingBottom: 32 },
-
-  logoArea: { alignItems: 'center', marginBottom: 40 },
-  logoBox: {
-    width: 72, height: 72, borderRadius: 20,
-    backgroundColor: 'rgba(29,158,117,0.12)',
-    borderWidth: 1.5, borderColor: 'rgba(29,158,117,0.3)',
-    alignItems: 'center', justifyContent: 'center',
-    marginBottom: 12,
-  },
-  appName: { color: C.text, fontSize: 26, fontWeight: '700' },
-
-  errorBanner: {
-    backgroundColor: 'rgba(239,68,68,0.12)',
-    borderWidth: 1, borderColor: 'rgba(239,68,68,0.3)',
-    borderRadius: 10, padding: 12, marginBottom: 16,
-  },
-  errorText: { color: C.danger, fontSize: 13, textAlign: 'center' },
-
-  googleBtn: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    borderWidth: 1.5, borderColor: C.border, borderRadius: 12,
-    paddingVertical: 14, gap: 10, backgroundColor: C.surface,
-  },
-  googleG:     { color: C.text, fontSize: 16, fontWeight: '700' },
-  googleLabel: { color: C.text, fontSize: 15, fontWeight: '500' },
-
-  divider:     { flexDirection: 'row', alignItems: 'center', marginVertical: 24 },
-  dividerLine: { flex: 1, height: 1, backgroundColor: C.border },
-  dividerText: { color: C.textSub, fontSize: 12, marginHorizontal: 12 },
-
-  label: { color: C.textSub, fontSize: 13, fontWeight: '500', marginBottom: 8 },
-  inputRow: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: C.surface, borderWidth: 1.5, borderColor: C.border,
-    borderRadius: 12, paddingHorizontal: 14, paddingVertical: 14, gap: 10,
-  },
-  input: { flex: 1, color: C.text, fontSize: 15 },
-
-  primaryBtn: {
-    backgroundColor: C.primary, borderRadius: 12,
-    paddingVertical: 16, alignItems: 'center', marginTop: 28,
-  },
-  primaryBtnDisabled: { opacity: 0.5 },
-  primaryBtnText:     { color: '#fff', fontSize: 16, fontWeight: '700' },
-
-  terms: {
-    color: C.textSub, fontSize: 12, textAlign: 'center',
-    marginTop: 16, lineHeight: 18,
-  },
-  termsLink: { color: C.primary },
-
-  linkRow:   { flexDirection: 'row', justifyContent: 'center' },
-  mutedText: { color: C.textSub, fontSize: 13 },
-  link:      { color: C.primary, fontSize: 13, fontWeight: '600' },
-});
