@@ -1,0 +1,50 @@
+appId: lista-ai-mobile   # No bundleIdentifier/android.package in app.json; replace with actual ID before running
+---
+- launchApp:
+    clearState: true
+
+# Register a fresh account
+- tapOn: "auth.login.signUp"
+- tapOn: "auth.register.namePlaceholder"
+- inputText: "Shop User"
+- tapOn: "auth.emailPlaceholder"
+- inputText: "shop@example.com"
+- tapOn: "auth.passwordPlaceholder"
+- inputText: "Password123"
+- tapOn: "auth.register.createAccount"
+
+# Create a list
+- assertVisible: "lists.title"
+- tapOn: "lists.newList"
+- assertVisible: "lists.addEditList.namePlaceholder"
+- tapOn: "lists.addEditList.namePlaceholder"
+- inputText: "My Shopping"
+- tapOn: "common.save"
+
+# Assert list appears in home
+- assertVisible: "My Shopping"
+
+# Open list and add item
+- tapOn: "My Shopping"
+- tapOn: "items.addItem"
+- tapOn: "items.descriptionPlaceholder"
+- inputText: "Milk"
+- tapOn: "items.done"
+
+# Assert item appears
+- assertVisible: "Milk"
+
+# Check the item
+- tapOn:
+    id: "Checkbox"
+- assertVisible: "Milk"
+
+# Delete the item
+- longPressOn: "Milk"
+- assertNotVisible: "Milk"
+
+# Go back and delete the list
+- tapOn: "common.back"
+- longPressOn: "My Shopping"
+- tapOn: "lists.deleteDialog.confirm"
+- assertNotVisible: "My Shopping"

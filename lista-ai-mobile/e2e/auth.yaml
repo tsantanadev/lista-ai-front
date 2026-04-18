@@ -1,0 +1,38 @@
+appId: lista-ai-mobile   # No bundleIdentifier/android.package in app.json; replace with actual ID before running
+---
+- launchApp:
+    clearState: true
+
+# Navigate to Register from Login
+- assertVisible: "auth.login.signUp"
+- tapOn: "auth.login.signUp"
+
+# Fill registration form
+- assertVisible: "auth.register.namePlaceholder"
+- tapOn: "auth.register.namePlaceholder"
+- inputText: "E2E User"
+- tapOn: "auth.emailPlaceholder"
+- inputText: "e2e@example.com"
+- tapOn: "auth.passwordPlaceholder"
+- inputText: "Password123"
+- tapOn: "auth.register.createAccount"
+
+# Assert home screen is visible after registration
+- assertVisible: "lists.title"
+
+# Logout
+- tapOn: "common.profile"
+- tapOn: "auth.logout"
+
+# Assert login screen is back
+- assertVisible: "auth.login.signIn"
+
+# Log in with the same credentials
+- tapOn: "auth.emailPlaceholder"
+- inputText: "e2e@example.com"
+- tapOn: "auth.passwordPlaceholder"
+- inputText: "Password123"
+- tapOn: "auth.login.signIn"
+
+# Assert home screen again
+- assertVisible: "lists.title"
