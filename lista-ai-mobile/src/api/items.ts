@@ -14,8 +14,9 @@ export async function fetchItems(remoteListId: number): Promise<RemoteItem[]> {
 export async function createItem(
   remoteListId: number,
   data: { description: string }
-): Promise<void> {
-  await apiClient.post(`/v1/lists/${remoteListId}/items`, data);
+): Promise<RemoteItem> {
+  const response = await apiClient.post<RemoteItem>(`/v1/lists/${remoteListId}/items`, data);
+  return response.data;
 }
 
 export async function updateItem(
