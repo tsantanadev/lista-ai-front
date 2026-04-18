@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typecheck:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lista-ai-mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: lista-ai-mobile/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lista-ai-mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: lista-ai-mobile/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    name: Jest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lista-ai-mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: lista-ai-mobile/package-lock.json
+      - run: npm ci
+      - run: npm test -- --watchAll=false --coverage
+
+# NOTE: Maestro E2E flows (e2e/auth.yaml, e2e/shopping.yaml) are intentionally
+# excluded from CI. Running a simulator on GitHub Actions is expensive and flaky.
+# Run them locally with: maestro test e2e/
