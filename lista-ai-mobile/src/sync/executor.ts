@@ -2,8 +2,8 @@ import { db } from '../db';
 import { lists, items } from '../db/schema';
 import { eq, isNull } from 'drizzle-orm';
 import { getPending, remove, incrementRetry, markFailed } from './queue';
-import { shouldOverwrite } from './conflict';
 import { fetchLists, createList, deleteList } from '../api/lists';
+import type { SyncOperation } from '../types/sync';
 import { createItem, updateItem, deleteItem } from '../api/items';
 import { now } from '../utils/date';
 
@@ -18,9 +18,9 @@ export async function executeSync(): Promise<void> {
       const payload = JSON.parse(entry.payload);
 
       if (entry.entity === 'list') {
-        await syncListOperation(entry.id, entry.operation as any, payload);
+        await syncListOperation(entry.id, entry.operation as SyncOperation, payload);
       } else if (entry.entity === 'item') {
-        await syncItemOperation(entry.id, entry.operation as any, payload);
+        await syncItemOperation(entry.id, entry.operation as SyncOperation, payload);
       }
 
       await remove(entry.id);
