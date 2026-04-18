@@ -1,2 +1,26 @@
+# dependencies
+node_modules/
+
+# local env files
+.env
+.env*.local
+
+# macOS
+.DS_Store
+*.pem
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# build output
+dist/
+build/
+
+# typescript
+*.tsbuildinfo
+
+# superpowers / worktrees
 .worktrees/
 .superpowers/
