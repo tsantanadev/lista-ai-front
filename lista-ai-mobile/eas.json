@@ -6,7 +6,6 @@
     "preview": {
       "android": {
         "buildType": "apk",
-        "packageName": "com.listai.app.test",
         "applicationId": "com.listai.app.test"
       },
       "ios": {
@@ -20,7 +19,6 @@
     "production": {
       "android": {
         "buildType": "app-bundle",
-        "packageName": "com.listai.app",
         "applicationId": "com.listai.app"
       },
       "ios": {
