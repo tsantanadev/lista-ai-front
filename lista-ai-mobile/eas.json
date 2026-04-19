@@ -1,0 +1,34 @@
+{
+  "cli": {
+    "version": ">= 16.0.0"
+  },
+  "build": {
+    "preview": {
+      "android": {
+        "buildType": "apk",
+        "packageName": "com.listai.app.test",
+        "applicationId": "com.listai.app.test"
+      },
+      "ios": {
+        "simulator": false,
+        "bundleIdentifier": "com.listai.app.test"
+      },
+      "env": {
+        "EXPO_PUBLIC_APP_NAME": "Lista AI (Test)"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle",
+        "packageName": "com.listai.app",
+        "applicationId": "com.listai.app"
+      },
+      "ios": {
+        "bundleIdentifier": "com.listai.app"
+      },
+      "env": {
+        "EXPO_PUBLIC_APP_NAME": "Lista AI"
+      }
+    }
+  }
+}
