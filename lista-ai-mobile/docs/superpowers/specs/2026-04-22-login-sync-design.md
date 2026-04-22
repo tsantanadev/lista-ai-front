@@ -30,7 +30,7 @@ seedFromRemote(onProgress?: (done: number, total: number) => void): Promise<void
 1. `GET /v1/lists` — insert each list into the local DB with `remoteId` set.
 2. For each list: `GET /v1/lists/:id/items` — insert each item with `remoteId` and `listId` set.
 
-**Progress reporting:** `total = lists.length + sum(items per list)`. Progress ticks once per list insert and once per item insert, matching the `(done, total)` shape used by `executeSync`.
+**Progress reporting:** `total = lists.length`, `done` increments once per list after all of that list's items are also inserted. Item counts per list are not known upfront (each requires a separate API call), so items are not counted individually — a list counts as one unit of work (list row + all its items). This keeps `total` stable from the start and avoids recalculating it mid-run.
 
 **Conflict handling:** Upsert by `remoteId`. If a record with that `remoteId` already exists locally, update it rather than inserting a duplicate. In practice this path is rarely hit (the trigger condition is an empty DB), but it makes the function safe to call idempotently.
 
