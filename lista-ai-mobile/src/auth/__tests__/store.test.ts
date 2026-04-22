@@ -169,6 +169,9 @@ describe('logout()', () => {
     expect(apiLogout).toHaveBeenCalledWith('ref');
     // DB tables wiped (items, lists, syncQueue)
     expect(mockDbDelete).toHaveBeenCalledTimes(3);
+    expect(mockDbDelete).toHaveBeenCalledWith({ _: 'items' });
+    expect(mockDbDelete).toHaveBeenCalledWith({ _: 'lists' });
+    expect(mockDbDelete).toHaveBeenCalledWith({ _: 'sync_queue' });
     // Query cache cleared
     const { queryClient } = require('../../queryClient');
     expect(queryClient.clear).toHaveBeenCalled();
