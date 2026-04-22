@@ -27,7 +27,7 @@ export async function seedFromRemote(
         updatedAt: now(),
         deletedAt: null,
       });
-      const [inserted] = await db.select().from(lists).where(eq(lists.remoteId, remote.id));
+      const [inserted] = await db.select().from(lists).where(and(eq(lists.remoteId, remote.id), isNull(lists.deletedAt)));
       if (!inserted) throw new Error(`Failed to read back inserted list remoteId=${remote.id}`);
       localListId = inserted.id;
     }
