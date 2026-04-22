@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { lists, items } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, isNull, and } from 'drizzle-orm';
 import { fetchLists } from '../api/lists';
 import { fetchItems } from '../api/items';
 import { now } from '../utils/date';
@@ -14,7 +14,7 @@ export async function seedFromRemote(
   for (let i = 0; i < remoteLists.length; i++) {
     const remote = remoteLists[i];
 
-    const [existing] = await db.select().from(lists).where(eq(lists.remoteId, remote.id));
+    const [existing] = await db.select().from(lists).where(and(eq(lists.remoteId, remote.id), isNull(lists.deletedAt)));
     let localListId: number;
 
     if (existing) {
@@ -28,12 +28,13 @@ export async function seedFromRemote(
         deletedAt: null,
       });
       const [inserted] = await db.select().from(lists).where(eq(lists.remoteId, remote.id));
+      if (!inserted) throw new Error(`Failed to read back inserted list remoteId=${remote.id}`);
       localListId = inserted.id;
     }
 
     const remoteItems = await fetchItems(remote.id);
     for (const remoteItem of remoteItems) {
-      const [existingItem] = await db.select().from(items).where(eq(items.remoteId, remoteItem.id));
+      const [existingItem] = await db.select().from(items).where(and(eq(items.remoteId, remoteItem.id), isNull(items.deletedAt)));
       if (existingItem) {
         await db.update(items)
           .set({ description: remoteItem.description, checked: remoteItem.checked })
