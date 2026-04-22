@@ -1,5 +1,23 @@
 import { act } from '@testing-library/react-native';
 
+var mockDbDelete: jest.Mock;
+
+jest.mock('../../db', () => ({
+  db: {
+    delete: (...args: any[]) => mockDbDelete(...args),
+  },
+}));
+
+jest.mock('../../db/schema', () => ({
+  items: { _: 'items' },
+  lists: { _: 'lists' },
+  syncQueue: { _: 'sync_queue' },
+}));
+
+jest.mock('../../queryClient', () => ({
+  queryClient: { clear: jest.fn() },
+}));
+
 jest.mock('../../api/auth', () => ({
   apiRegister:   jest.fn(),
   apiLogin:      jest.fn(),
@@ -31,6 +49,7 @@ const tokenResponse = {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockDbDelete = jest.fn().mockResolvedValue(undefined);
   useAuthStore.setState({
     isAuthenticated: false,
     isLoading: true,
@@ -130,7 +149,7 @@ describe('refreshTokens()', () => {
 // ── logout() ──────────────────────────────────────────────────────────────────
 
 describe('logout()', () => {
-  it('clears auth state and calls apiLogout with the current refresh token', async () => {
+  it('clears auth state, calls apiLogout, wipes DB tables, and clears query cache', async () => {
     useAuthStore.setState({
       isAuthenticated: true,
       accessToken: 'tok',
@@ -148,6 +167,11 @@ describe('logout()', () => {
     expect(state.refreshToken).toBeNull();
     expect(state.user).toBeNull();
     expect(apiLogout).toHaveBeenCalledWith('ref');
+    // DB tables wiped (items, lists, syncQueue)
+    expect(mockDbDelete).toHaveBeenCalledTimes(3);
+    // Query cache cleared
+    const { queryClient } = require('../../queryClient');
+    expect(queryClient.clear).toHaveBeenCalled();
   });
 });
 

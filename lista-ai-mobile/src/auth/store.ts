@@ -2,6 +2,9 @@ import { create } from 'zustand';
 import { saveAuth, loadAuth, clearAuth, StoredUser } from './storage';
 import { apiRegister, apiLogin, apiGoogleAuth, apiRefresh, apiLogout } from '../api/auth';
 import i18n from '../i18n';
+import { db } from '../db';
+import { items as itemsTable, lists as listsTable, syncQueue as syncQueueTable } from '../db/schema';
+import { queryClient } from '../queryClient';
 
 /** Decode a JWT payload without verifying the signature (safe for client-side display). */
 function decodeJwtPayload(token: string): Record<string, unknown> {
@@ -150,6 +153,10 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
       if (currentRefresh) await apiLogout(currentRefresh);
     } catch { /* best effort */ }
     await clearAuth();
+    await db.delete(itemsTable);
+    await db.delete(listsTable);
+    await db.delete(syncQueueTable);
+    queryClient.clear();
     set({ isAuthenticated: false, accessToken: null, refreshToken: null, user: null });
   },
 
