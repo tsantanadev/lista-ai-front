@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Platform,
   KeyboardAvoidingView,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft, Camera, Pencil, Lock, Trash2 } from 'lucide-react-native';
@@ -19,6 +20,8 @@ import { useAuthStore } from '../../auth/store';
 import { saveAuth, loadAuth } from '../../auth/storage';
 import type { PerfilInfoProps } from '../../navigation/types';
 import { useTheme } from '../../theme/ThemeContext';
+import { getActivePendingCount } from '../../sync/queue';
+import { executeSync } from '../../sync/executor';
 
 const LOCAL_PROFILE_KEY = 'local.profile';
 type LocalProfile = { phone: string; address: string };
@@ -37,6 +40,12 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
   const [address, setAddress] = useState('');
   const [saving, setSaving]   = useState(false);
 
+  type SyncPhase = 'idle' | 'syncing' | 'done' | 'failed';
+  const [syncModalVisible, setSyncModalVisible]   = useState(false);
+  const [syncPhase, setSyncPhase]                 = useState<SyncPhase>('idle');
+  const [syncProgress, setSyncProgress]           = useState({ done: 0, total: 0 });
+  const [syncFailures, setSyncFailures]           = useState(0);
+
   useEffect(() => {
     AsyncStorage.getItem(LOCAL_PROFILE_KEY)
       .then((raw) => {
@@ -48,6 +57,13 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (syncPhase === 'done') {
+      const timer = setTimeout(() => logout(), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [syncPhase]);
 
   async function handleSave() {
     setSaving(true);
@@ -68,15 +84,40 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
     }
   }
 
-  function confirmLogout() {
-    Alert.alert(
-      t('profile.info.signOutTitle'),
-      t('profile.info.signOutMessage'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        { text: t('profile.info.signOutConfirm'), style: 'destructive', onPress: () => logout() },
-      ],
-    );
+  async function confirmLogout() {
+    const pending = await getActivePendingCount();
+    if (pending === 0) {
+      Alert.alert(
+        t('profile.info.signOutTitle'),
+        t('profile.info.signOutMessage'),
+        [
+          { text: t('common.cancel'), style: 'cancel' },
+          { text: t('profile.info.signOutConfirm'), style: 'destructive', onPress: () => logout() },
+        ],
+      );
+    } else {
+      setSyncProgress({ done: 0, total: pending });
+      setSyncPhase('idle');
+      setSyncModalVisible(true);
+    }
+  }
+
+  async function handleSyncAndLogout() {
+    setSyncPhase('syncing');
+    const result = await executeSync((done, total) => {
+      setSyncProgress({ done, total });
+    });
+    if (result.failed > 0) {
+      setSyncFailures(result.failed);
+      setSyncPhase('failed');
+    } else {
+      setSyncPhase('done');
+    }
+  }
+
+  function handleSignOutAnyway() {
+    setSyncModalVisible(false);
+    logout();
   }
 
   const displayName = user?.name ?? '';
@@ -126,6 +167,61 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
       gap: 8, marginTop: 32,
     },
     deleteText: { color: theme.destructive, fontSize: 14, fontWeight: '600' },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+      paddingHorizontal: 24,
+    },
+    modalCard: {
+      backgroundColor: theme.surface,
+      borderRadius: 16,
+      padding: 24,
+      width: '100%' as const,
+      borderWidth: 1,
+      borderColor: theme.border,
+      gap: 12,
+    },
+    modalTitle: {
+      color: theme.textPrimary,
+      fontSize: 17,
+      fontWeight: '600' as const,
+      textAlign: 'center' as const,
+    },
+    modalBody: {
+      color: theme.neutral,
+      fontSize: 14,
+      textAlign: 'center' as const,
+      lineHeight: 20,
+    },
+    progressTrack: {
+      height: 4,
+      backgroundColor: theme.progressTrack,
+      borderRadius: 2,
+      overflow: 'hidden' as const,
+    },
+    progressFill: {
+      height: 4,
+      backgroundColor: theme.primary,
+      borderRadius: 2,
+    },
+    primaryBtn: {
+      backgroundColor: theme.primary,
+      borderRadius: 10,
+      paddingVertical: 13,
+      alignItems: 'center' as const,
+    },
+    primaryBtnText: { color: '#fff', fontSize: 15, fontWeight: '600' as const },
+    destructiveBtn: {
+      backgroundColor: theme.destructive,
+      borderRadius: 10,
+      paddingVertical: 13,
+      alignItems: 'center' as const,
+    },
+    destructiveBtnText: { color: '#fff', fontSize: 15, fontWeight: '600' as const },
+    ghostBtn: { paddingVertical: 10, alignItems: 'center' as const },
+    ghostBtnText: { color: theme.neutral, fontSize: 14 },
   });
 
   return (
@@ -195,6 +291,71 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
             <Text style={s.deleteText}>{t('profile.info.signOut')}</Text>
           </TouchableOpacity>
         </ScrollView>
+        <Modal
+          visible={syncModalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => syncPhase !== 'syncing' && setSyncModalVisible(false)}
+        >
+          <View style={s.modalOverlay}>
+            <View style={s.modalCard}>
+              <Text style={s.modalTitle}>{t('profile.info.syncWarningTitle')}</Text>
+
+              {syncPhase === 'idle' && (
+                <>
+                  <Text style={s.modalBody}>
+                    {t('profile.info.syncWarningMessage', { count: syncProgress.total })}
+                  </Text>
+                  <TouchableOpacity style={s.primaryBtn} onPress={handleSyncAndLogout} activeOpacity={0.8}>
+                    <Text style={s.primaryBtnText}>{t('profile.info.syncAndSignOut')}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={s.ghostBtn} onPress={handleSignOutAnyway} activeOpacity={0.8}>
+                    <Text style={s.ghostBtnText}>{t('profile.info.signOutAnyway')}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={s.ghostBtn} onPress={() => setSyncModalVisible(false)} activeOpacity={0.8}>
+                    <Text style={s.ghostBtnText}>{t('common.cancel')}</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+
+              {syncPhase === 'syncing' && (
+                <>
+                  <Text style={s.modalBody}>
+                    {t('profile.info.syncingProgress', { done: syncProgress.done, total: syncProgress.total })}
+                  </Text>
+                  <View style={s.progressTrack}>
+                    <View
+                      style={[
+                        s.progressFill,
+                        { width: `${syncProgress.total > 0 ? Math.round((syncProgress.done / syncProgress.total) * 100) : 0}%` },
+                      ]}
+                    />
+                  </View>
+                </>
+              )}
+
+              {syncPhase === 'done' && (
+                <View style={s.progressTrack}>
+                  <View style={[s.progressFill, { width: '100%' }]} />
+                </View>
+              )}
+
+              {syncPhase === 'failed' && (
+                <>
+                  <Text style={s.modalBody}>
+                    {t('profile.info.syncFailedMessage', { count: syncFailures })}
+                  </Text>
+                  <TouchableOpacity style={s.destructiveBtn} onPress={handleSignOutAnyway} activeOpacity={0.8}>
+                    <Text style={s.destructiveBtnText}>{t('profile.info.signOutAnyway')}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={s.ghostBtn} onPress={() => setSyncModalVisible(false)} activeOpacity={0.8}>
+                    <Text style={s.ghostBtnText}>{t('common.cancel')}</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+          </View>
+        </Modal>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
