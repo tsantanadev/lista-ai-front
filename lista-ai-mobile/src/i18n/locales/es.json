@@ -118,7 +118,13 @@
       "signOutTitle": "Cerrar sesión",
       "signOutMessage": "¿Estás seguro de que quieres cerrar sesión?",
       "signOutConfirm": "Cerrar sesión",
-      "errorSaving": "No se pudieron guardar los cambios."
+      "errorSaving": "No se pudieron guardar los cambios.",
+      "syncWarningTitle": "Cambios sin guardar",
+      "syncWarningMessage": "Tienes {{count}} cambio(s) sin sincronizar. Si cierras sesión ahora, se perderán permanentemente.",
+      "syncAndSignOut": "Sincronizar y Cerrar sesión",
+      "signOutAnyway": "Cerrar sesión de todos modos",
+      "syncingProgress": "Sincronizando {{done}} de {{total}}…",
+      "syncFailedMessage": "{{count}} cambio(s) no pudieron sincronizarse y se perderán."
     }
   },
   "navigation": {

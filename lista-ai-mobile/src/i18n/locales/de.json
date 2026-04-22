@@ -118,7 +118,13 @@
       "signOutTitle": "Abmelden",
       "signOutMessage": "Möchtest du dich wirklich abmelden?",
       "signOutConfirm": "Abmelden",
-      "errorSaving": "Änderungen konnten nicht gespeichert werden."
+      "errorSaving": "Änderungen konnten nicht gespeichert werden.",
+      "syncWarningTitle": "Nicht gespeicherte Änderungen",
+      "syncWarningMessage": "Du hast {{count}} nicht synchronisierte(n) Änderung(en). Wenn du dich jetzt abmeldest, gehen sie dauerhaft verloren.",
+      "syncAndSignOut": "Synchronisieren und abmelden",
+      "signOutAnyway": "Trotzdem abmelden",
+      "syncingProgress": "Synchronisiere {{done}} von {{total}}…",
+      "syncFailedMessage": "{{count}} Änderung(en) konnte(n) nicht synchronisiert werden und gehen verloren."
     }
   },
   "navigation": {
