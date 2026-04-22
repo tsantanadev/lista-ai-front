@@ -7,7 +7,7 @@ import type { SyncOperation } from '../types/sync';
 import { createItem, updateItem, deleteItem } from '../api/items';
 import { now } from '../utils/date';
 
-type SyncResult = { total: number; succeeded: number; failed: number };
+export type SyncResult = { total: number; succeeded: number; failed: number };
 
 export async function executeSync(
   onProgress?: (done: number, total: number) => void,

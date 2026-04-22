@@ -121,6 +121,8 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
     logout();
   }
 
+  const isSyncing = syncPhase === 'syncing';
+
   const displayName = user?.name ?? '';
 
   const s = StyleSheet.create({
@@ -307,7 +309,7 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
                   <Text style={s.modalBody}>
                     {t('profile.info.syncWarningMessage', { count: syncProgress.total })}
                   </Text>
-                  <TouchableOpacity style={s.primaryBtn} onPress={handleSyncAndLogout} activeOpacity={0.8}>
+                  <TouchableOpacity style={s.primaryBtn} onPress={handleSyncAndLogout} activeOpacity={0.8} disabled={isSyncing}>
                     <Text style={s.primaryBtnText}>{t('profile.info.syncAndSignOut')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={s.ghostBtn} onPress={handleSignOutAnyway} activeOpacity={0.8}>
