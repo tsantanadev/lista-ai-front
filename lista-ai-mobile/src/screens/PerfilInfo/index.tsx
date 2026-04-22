@@ -26,6 +26,8 @@ import { executeSync } from '../../sync/executor';
 const LOCAL_PROFILE_KEY = 'local.profile';
 type LocalProfile = { phone: string; address: string };
 
+type SyncPhase = 'idle' | 'syncing' | 'done' | 'failed';
+
 function getInitials(name: string): string {
   return name.split(' ').filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('');
 }
@@ -40,7 +42,6 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
   const [address, setAddress] = useState('');
   const [saving, setSaving]   = useState(false);
 
-  type SyncPhase = 'idle' | 'syncing' | 'done' | 'failed';
   const [syncModalVisible, setSyncModalVisible]   = useState(false);
   const [syncPhase, setSyncPhase]                 = useState<SyncPhase>('idle');
   const [syncProgress, setSyncProgress]           = useState({ done: 0, total: 0 });
@@ -63,7 +64,7 @@ export function PerfilInfo({ navigation }: PerfilInfoProps) {
       const timer = setTimeout(() => logout(), 800);
       return () => clearTimeout(timer);
     }
-  }, [syncPhase]);
+  }, [syncPhase, logout]);
 
   async function handleSave() {
     setSaving(true);
