@@ -5,6 +5,7 @@ import i18n from '../i18n';
 import { db } from '../db';
 import { items as itemsTable, lists as listsTable, syncQueue as syncQueueTable } from '../db/schema';
 import { queryClient } from '../queryClient';
+import { seedFromRemote } from '../sync/seed';
 
 /** Decode a JWT payload without verifying the signature (safe for client-side display). */
 function decodeJwtPayload(token: string): Record<string, unknown> {
@@ -30,6 +31,8 @@ export type AuthUser = StoredUser;
 type AuthState = {
   isAuthenticated: boolean;
   isLoading: boolean; // true during initial hydration from storage
+  isSyncing: boolean;
+  syncProgress: { done: number; total: number } | null;
   user: AuthUser | null;
   accessToken: string | null;
   refreshToken: string | null;
@@ -51,6 +54,8 @@ type AuthActions = {
 export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
   isAuthenticated: false,
   isLoading: true,
+  isSyncing: false,
+  syncProgress: null,
   user: null,
   accessToken: null,
   refreshToken: null,
@@ -107,7 +112,18 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
         name:  storedUser?.user.email === email ? (storedUser.user.name ?? email.split('@')[0]) : email.split('@')[0],
       };
       await saveAuth(tokens, user);
-      set({ isAuthenticated: true, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
+      set({ accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
+
+      const rows = await db.select().from(listsTable).limit(1);
+      if (rows.length === 0) {
+        set({ isSyncing: true, syncProgress: null });
+        try {
+          await seedFromRemote((done, total) => set({ syncProgress: { done, total } }));
+        } catch { /* non-fatal: user lands in app with empty state */ }
+        set({ isSyncing: false, syncProgress: null });
+      }
+
+      set({ isAuthenticated: true });
     } catch (e: unknown) {
       const msg = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail
         ?? i18n.t('auth.login.invalidCredentials');
@@ -128,7 +144,18 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
         name:  name || email.split('@')[0],
       };
       await saveAuth(tokens, user);
-      set({ isAuthenticated: true, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
+      set({ accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
+
+      const rows = await db.select().from(listsTable).limit(1);
+      if (rows.length === 0) {
+        set({ isSyncing: true, syncProgress: null });
+        try {
+          await seedFromRemote((done, total) => set({ syncProgress: { done, total } }));
+        } catch { /* non-fatal */ }
+        set({ isSyncing: false, syncProgress: null });
+      }
+
+      set({ isAuthenticated: true });
     } catch (e: unknown) {
       const msg = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail
         ?? i18n.t('auth.login.googleError');

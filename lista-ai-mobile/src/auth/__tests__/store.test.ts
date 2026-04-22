@@ -1,10 +1,17 @@
 import { act } from '@testing-library/react-native';
 
+/** Flush all pending microtasks and resolved promise callbacks. */
+const flushPromises = () => new Promise<void>((res) => setImmediate(res));
+
 var mockDbDelete: jest.Mock;
+var mockDbSelect: jest.Mock;
+var mockDbFrom: jest.Mock;
+var mockDbLimit: jest.Mock;
 
 jest.mock('../../db', () => ({
   db: {
     delete: (...args: any[]) => mockDbDelete(...args),
+    select: (...args: any[]) => mockDbSelect(...args),
   },
 }));
 
@@ -31,8 +38,13 @@ jest.mock('../../i18n', () => ({
   t: (key: string) => key,
 }));
 
+jest.mock('../../sync/seed', () => ({
+  seedFromRemote: jest.fn().mockResolvedValue(undefined),
+}));
+
 import { useAuthStore } from '../store';
 import { apiRegister, apiLogin, apiRefresh, apiLogout } from '../../api/auth';
+import { seedFromRemote } from '../../sync/seed';
 
 // Build a minimal valid-looking JWT whose payload contains sub and email.
 // atob/btoa are available in the Jest jsdom/RN environment.
@@ -50,9 +62,14 @@ const tokenResponse = {
 beforeEach(() => {
   jest.clearAllMocks();
   mockDbDelete = jest.fn().mockResolvedValue(undefined);
+  mockDbLimit = jest.fn().mockResolvedValue([]); // empty DB by default
+  mockDbFrom = jest.fn().mockReturnValue({ limit: mockDbLimit });
+  mockDbSelect = jest.fn().mockReturnValue({ from: mockDbFrom });
   useAuthStore.setState({
     isAuthenticated: false,
     isLoading: true,
+    isSyncing: false,
+    syncProgress: null,
     user: null,
     accessToken: null,
     refreshToken: null,
@@ -212,5 +229,77 @@ describe('hydrate()', () => {
 
     expect(useAuthStore.getState().isAuthenticated).toBe(false);
     expect(useAuthStore.getState().isLoading).toBe(false);
+  });
+});
+
+// ── loginLocal() seed-on-login ─────────────────────────────────────────────────
+
+describe('loginLocal() seed-on-login', () => {
+  it('calls seedFromRemote when lists table is empty after login', async () => {
+    (apiLogin as jest.Mock).mockResolvedValue(tokenResponse);
+    mockDbLimit.mockResolvedValue([]); // empty DB
+
+    await act(async () => {
+      await useAuthStore.getState().loginLocal('a@b.com', 'pass123');
+    });
+
+    expect(seedFromRemote).toHaveBeenCalledTimes(1);
+    expect(useAuthStore.getState().isAuthenticated).toBe(true);
+    expect(useAuthStore.getState().isSyncing).toBe(false);
+    expect(useAuthStore.getState().syncProgress).toBeNull();
+  });
+
+  it('skips seedFromRemote when DB already has lists', async () => {
+    (apiLogin as jest.Mock).mockResolvedValue(tokenResponse);
+    mockDbLimit.mockResolvedValue([{ id: 1 }]); // DB not empty
+
+    await act(async () => {
+      await useAuthStore.getState().loginLocal('a@b.com', 'pass123');
+    });
+
+    expect(seedFromRemote).not.toHaveBeenCalled();
+    expect(useAuthStore.getState().isAuthenticated).toBe(true);
+  });
+
+  it('still authenticates if seedFromRemote throws', async () => {
+    (apiLogin as jest.Mock).mockResolvedValue(tokenResponse);
+    mockDbLimit.mockResolvedValue([]);
+    (seedFromRemote as jest.Mock).mockRejectedValue(new Error('network'));
+
+    await act(async () => {
+      await useAuthStore.getState().loginLocal('a@b.com', 'pass123');
+    });
+
+    expect(useAuthStore.getState().isAuthenticated).toBe(true);
+    expect(useAuthStore.getState().isSyncing).toBe(false);
+  });
+
+  it('sets isAuthenticated only after seed completes', async () => {
+    (apiLogin as jest.Mock).mockResolvedValue(tokenResponse);
+    mockDbLimit.mockResolvedValue([]);
+
+    let resolveSeeed!: () => void;
+    (seedFromRemote as jest.Mock).mockImplementation(
+      () => new Promise<void>((res) => { resolveSeeed = res; }),
+    );
+
+    let loginDone = false;
+    const loginPromise = act(async () => {
+      await useAuthStore.getState().loginLocal('a@b.com', 'pass123');
+      loginDone = true;
+    });
+
+    // Flush microtasks so loginLocal progresses up to the seedFromRemote await
+    await flushPromises();
+
+    // Seed is still in flight — isAuthenticated must still be false
+    expect(useAuthStore.getState().isAuthenticated).toBe(false);
+    expect(useAuthStore.getState().isSyncing).toBe(true);
+
+    resolveSeeed();
+    await loginPromise;
+
+    expect(useAuthStore.getState().isAuthenticated).toBe(true);
+    expect(loginDone).toBe(true);
   });
 });
