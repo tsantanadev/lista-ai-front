@@ -118,7 +118,13 @@
       "signOutTitle": "Se déconnecter",
       "signOutMessage": "Êtes-vous sûr de vouloir vous déconnecter ?",
       "signOutConfirm": "Se déconnecter",
-      "errorSaving": "Impossible d'enregistrer les modifications."
+      "errorSaving": "Impossible d'enregistrer les modifications.",
+      "syncWarningTitle": "Modifications non sauvegardées",
+      "syncWarningMessage": "Vous avez {{count}} modification(s) non synchronisée(s). Déconnectez-vous maintenant et elles seront définitivement perdues.",
+      "syncAndSignOut": "Synchroniser et se déconnecter",
+      "signOutAnyway": "Se déconnecter quand même",
+      "syncingProgress": "Synchronisation {{done}} sur {{total}}…",
+      "syncFailedMessage": "{{count}} modification(s) n'ont pas pu être synchronisée(s) et seront perdues."
     }
   },
   "navigation": {

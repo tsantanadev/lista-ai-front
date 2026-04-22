@@ -1,4 +1,4 @@
-import { enqueue, getPending, remove, incrementRetry, markFailed } from '../queue';
+import { enqueue, getPending, remove, incrementRetry, markFailed, getActivePendingCount } from '../queue';
 
 // var declarations are hoisted — they exist as undefined when jest.mock factory runs,
 // but the factory closures capture them by reference and see the assigned values at call time.
@@ -110,5 +110,24 @@ describe('markFailed()', () => {
     expect(mockSet).toHaveBeenCalledWith(
       expect.objectContaining({ retryCount: -1, lastError: 'fatal error' }),
     );
+  });
+});
+
+describe('getActivePendingCount()', () => {
+  it('returns the number of entries with retryCount >= 0', async () => {
+    mockSelectWhere.mockResolvedValue([{ id: 1 }, { id: 2 }]);
+
+    const result = await getActivePendingCount();
+
+    expect(result).toBe(2);
+    expect(db.select).toHaveBeenCalled();
+  });
+
+  it('returns 0 when no active entries exist', async () => {
+    mockSelectWhere.mockResolvedValue([]);
+
+    const result = await getActivePendingCount();
+
+    expect(result).toBe(0);
   });
 });

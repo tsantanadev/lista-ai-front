@@ -127,3 +127,49 @@ describe('executeSync()', () => {
     expect(remove).toHaveBeenCalledWith(1);
   });
 });
+
+describe('executeSync() with progress callback', () => {
+  it('calls onProgress for each active entry processed', async () => {
+    (getPending as jest.Mock).mockResolvedValue([
+      makePending({ id: 1, retryCount: 0 }),
+      makePending({ id: 2, retryCount: 0 }),
+      makePending({ id: 3, retryCount: -1 }), // permanently failed — skipped
+    ]);
+    (createList as jest.Mock).mockResolvedValue({ id: 99, name: 'Groceries' });
+
+    const onProgress = jest.fn();
+    await executeSync(onProgress);
+
+    expect(onProgress).toHaveBeenCalledTimes(2);
+    expect(onProgress).toHaveBeenNthCalledWith(1, 1, 2);
+    expect(onProgress).toHaveBeenNthCalledWith(2, 2, 2);
+  });
+
+  it('returns succeeded and failed counts', async () => {
+    (getPending as jest.Mock).mockResolvedValue([
+      makePending({ id: 1, retryCount: 0 }),
+      makePending({ id: 2, retryCount: 0 }),
+    ]);
+    (createList as jest.Mock)
+      .mockResolvedValueOnce({ id: 99, name: 'Groceries' }) // id:1 succeeds
+      .mockRejectedValueOnce(new Error('network error'));    // id:2 fails
+
+    const result = await executeSync();
+
+    expect(result.total).toBe(2);
+    expect(result.succeeded).toBe(1);
+    expect(result.failed).toBe(1);
+  });
+
+  it('does not call onProgress when there are no active entries', async () => {
+    (getPending as jest.Mock).mockResolvedValue([
+      makePending({ id: 1, retryCount: -1 }),
+    ]);
+
+    const onProgress = jest.fn();
+    const result = await executeSync(onProgress);
+
+    expect(onProgress).not.toHaveBeenCalled();
+    expect(result).toEqual({ total: 0, succeeded: 0, failed: 0 });
+  });
+});

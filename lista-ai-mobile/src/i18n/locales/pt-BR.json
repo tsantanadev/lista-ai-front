@@ -118,7 +118,13 @@
       "signOutTitle": "Sair da conta",
       "signOutMessage": "Tem certeza que deseja sair?",
       "signOutConfirm": "Sair",
-      "errorSaving": "Não foi possível salvar as alterações."
+      "errorSaving": "Não foi possível salvar as alterações.",
+      "syncWarningTitle": "Alterações não salvas",
+      "syncWarningMessage": "Você tem {{count}} alteração(ões) não sincronizada(s). Sair agora resultará na perda permanente dessas alterações.",
+      "syncAndSignOut": "Sincronizar e Sair",
+      "signOutAnyway": "Sair mesmo assim",
+      "syncingProgress": "Sincronizando {{done}} de {{total}}…",
+      "syncFailedMessage": "{{count}} alteração(ões) não pôde(ram) ser sincronizada(s) e será(ão) perdida(s)."
     }
   },
   "navigation": {

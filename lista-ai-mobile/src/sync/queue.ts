@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { syncQueue } from '../db/schema';
-import { eq, asc } from 'drizzle-orm';
+import { eq, asc, gte } from 'drizzle-orm';
 import type { SyncEntity, SyncOperation } from '../types/sync';
 import { now } from '../utils/date';
 
@@ -47,4 +47,12 @@ export async function markFailed(id: number, error: string): Promise<void> {
     .update(syncQueue)
     .set({ retryCount: -1, lastError: error })
     .where(eq(syncQueue.id, id));
+}
+
+export async function getActivePendingCount(): Promise<number> {
+  const rows = await db
+    .select({ id: syncQueue.id })
+    .from(syncQueue)
+    .where(gte(syncQueue.retryCount, 0));
+  return rows.length;
 }

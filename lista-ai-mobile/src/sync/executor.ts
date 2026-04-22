@@ -7,11 +7,18 @@ import type { SyncOperation } from '../types/sync';
 import { createItem, updateItem, deleteItem } from '../api/items';
 import { now } from '../utils/date';
 
-export async function executeSync(): Promise<void> {
+export type SyncResult = { total: number; succeeded: number; failed: number };
+
+export async function executeSync(
+  onProgress?: (done: number, total: number) => void,
+): Promise<SyncResult> {
   const pending = await getPending();
+  const active = pending.filter((e) => e.retryCount !== -1);
+  const total = active.length;
+  let done = 0;
+  let succeeded = 0;
 
   for (const entry of pending) {
-    // Skip permanently failed entries
     if (entry.retryCount === -1) continue;
 
     try {
@@ -24,6 +31,7 @@ export async function executeSync(): Promise<void> {
       }
 
       await remove(entry.id);
+      succeeded++;
     } catch (err) {
       const error = err instanceof Error ? err.message : String(err);
       if (entry.retryCount >= 4) {
@@ -32,6 +40,9 @@ export async function executeSync(): Promise<void> {
         await incrementRetry(entry.id, error);
       }
     }
+
+    done++;
+    onProgress?.(done, total);
   }
 
   // Background refresh: pull server lists, upsert non-dirty local records
@@ -44,11 +55,10 @@ export async function executeSync(): Promise<void> {
         .where(eq(lists.remoteId, remote.id));
 
       if (local) {
-        // Only overwrite if local is not dirty (no pending sync ops for it)
         const localPending = pending.filter(
           (e) =>
             e.entity === 'list' &&
-            JSON.parse(e.payload).localId === local.id
+            JSON.parse(e.payload).localId === local.id,
         );
         if (localPending.length === 0) {
           await db
@@ -57,7 +67,6 @@ export async function executeSync(): Promise<void> {
             .where(eq(lists.id, local.id));
         }
       } else {
-        // New list from server — insert locally
         await db.insert(lists).values({
           remoteId: remote.id,
           name: remote.name,
@@ -69,6 +78,8 @@ export async function executeSync(): Promise<void> {
   } catch {
     // Background refresh failure is non-fatal
   }
+
+  return { total, succeeded, failed: total - succeeded };
 }
 
 async function syncListOperation(

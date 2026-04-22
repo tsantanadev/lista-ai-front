@@ -118,7 +118,13 @@
       "signOutTitle": "Sign out",
       "signOutMessage": "Are you sure you want to sign out?",
       "signOutConfirm": "Sign out",
-      "errorSaving": "Could not save changes."
+      "errorSaving": "Could not save changes.",
+      "syncWarningTitle": "Unsaved Changes",
+      "syncWarningMessage": "You have {{count}} unsynced change(s). Sign out now and they will be permanently lost.",
+      "syncAndSignOut": "Sync & Sign Out",
+      "signOutAnyway": "Sign out anyway",
+      "syncingProgress": "Syncing {{done}} of {{total}}…",
+      "syncFailedMessage": "{{count}} change(s) could not be synced and will be lost."
     }
   },
   "navigation": {

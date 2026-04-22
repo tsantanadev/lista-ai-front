@@ -3,25 +3,17 @@ import { View, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts, Inter_400Regular, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 import * as SplashScreen from 'expo-splash-screen';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { RootStack } from './src/navigation/RootStack';
 import { runMigrations } from './src/db/migrate';
 import { useConnectivity } from './src/hooks/useConnectivity';
 import { useAuthStore } from './src/auth/store';
 import { useStore } from './src/store';
 import { ThemeProvider } from './src/theme/ThemeContext';
+import { queryClient } from './src/queryClient';
 import './src/i18n';
 
 SplashScreen.preventAutoHideAsync();
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      staleTime: Infinity,
-    },
-  },
-});
 
 function AppContent() {
   useConnectivity();
