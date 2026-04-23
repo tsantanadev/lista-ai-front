@@ -284,9 +284,9 @@ describe('loginLocal() seed-on-login', () => {
     (apiLogin as jest.Mock).mockResolvedValue(tokenResponse);
     mockDbLimit.mockResolvedValue([]);
 
-    let resolveSeeed!: () => void;
+    let resolveSeed!: () => void;
     (seedFromRemote as jest.Mock).mockImplementation(
-      () => new Promise<void>((res) => { resolveSeeed = res; }),
+      () => new Promise<void>((res) => { resolveSeed = res; }),
     );
 
     let loginDone = false;
@@ -302,7 +302,7 @@ describe('loginLocal() seed-on-login', () => {
     expect(useAuthStore.getState().isAuthenticated).toBe(false);
     expect(useAuthStore.getState().isSyncing).toBe(true);
 
-    resolveSeeed();
+    resolveSeed();
     await loginPromise;
 
     expect(useAuthStore.getState().isAuthenticated).toBe(true);

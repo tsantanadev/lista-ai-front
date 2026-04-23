@@ -120,7 +120,9 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
         set({ isSyncing: true, syncProgress: null });
         try {
           await seedFromRemote((done, total) => set({ syncProgress: { done, total } }));
-        } catch { /* non-fatal: user lands in app with empty state */ }
+        } catch (err) {
+          if (__DEV__) console.warn('[seed] seedFromRemote failed, continuing with empty state:', err);
+        }
         set({ isSyncing: false, syncProgress: null });
       }
 
@@ -152,7 +154,9 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
         set({ isSyncing: true, syncProgress: null });
         try {
           await seedFromRemote((done, total) => set({ syncProgress: { done, total } }));
-        } catch { /* non-fatal */ }
+        } catch (err) {
+          if (__DEV__) console.warn('[seed] seedFromRemote failed, continuing with empty state:', err);
+        }
         set({ isSyncing: false, syncProgress: null });
       }
 
