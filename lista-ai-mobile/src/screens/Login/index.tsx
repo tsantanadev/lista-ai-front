@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ShoppingBag, Eye, EyeOff, Mail, Lock } from 'lucide-react-native';
@@ -30,7 +31,7 @@ export function Login({ navigation }: LoginProps) {
   const [googleLoading, setGoogleLoading] = useState(false);
   const { theme } = useTheme();
 
-  const { loginLocal, loginGoogle, error, clearError } = useAuthStore();
+  const { loginLocal, loginGoogle, error, clearError, isSyncing, syncProgress } = useAuthStore();
   const { t } = useTranslation();
 
   const [_req, response, promptAsync] = Google.useAuthRequest({
@@ -108,6 +109,39 @@ export function Login({ navigation }: LoginProps) {
     linkText:  { color: theme.neutral, fontSize: 13 },
     mutedText: { color: theme.neutral, fontSize: 13 },
     link:      { color: theme.primary, fontSize: 13, fontWeight: '600' },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      alignItems: 'center' as const,
+      justifyContent: 'center' as const,
+      paddingHorizontal: 24,
+    },
+    modalCard: {
+      backgroundColor: theme.surface,
+      borderRadius: 16,
+      padding: 24,
+      width: '100%' as const,
+      borderWidth: 1,
+      borderColor: theme.border,
+      gap: 16,
+    },
+    modalTitle: {
+      color: theme.textPrimary,
+      fontSize: 17,
+      fontWeight: '600' as const,
+      textAlign: 'center' as const,
+    },
+    progressTrack: {
+      height: 4,
+      backgroundColor: theme.progressTrack,
+      borderRadius: 2,
+      overflow: 'hidden' as const,
+    },
+    progressFill: {
+      height: 4,
+      backgroundColor: theme.primary,
+      borderRadius: 2,
+    },
   });
 
   return (
@@ -191,6 +225,29 @@ export function Login({ navigation }: LoginProps) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <Modal visible={isSyncing} transparent animationType="fade">
+        <View style={s.modalOverlay}>
+          <View style={s.modalCard}>
+            <Text style={s.modalTitle}>{t('sync.login.syncing')}</Text>
+            {syncProgress ? (
+              <View style={s.progressTrack}>
+                <View
+                  style={[
+                    s.progressFill,
+                    {
+                      width: `${syncProgress.total > 0
+                        ? Math.round((syncProgress.done / syncProgress.total) * 100)
+                        : 0}%`,
+                    },
+                  ]}
+                />
+              </View>
+            ) : (
+              <ActivityIndicator size="small" color={theme.primary} />
+            )}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
