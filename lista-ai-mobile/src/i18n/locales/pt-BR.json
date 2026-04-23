@@ -135,7 +135,10 @@
   "sync": {
     "error": "Erro de sincronização — toque para tentar novamente",
     "syncing_one": "Sincronizando {{count}} item…",
-    "syncing_other": "Sincronizando {{count}} itens…"
+    "syncing_other": "Sincronizando {{count}} itens…",
+    "login": {
+      "syncing": "Sincronizando suas listas…"
+    }
   },
   "errorBoundary": {
     "title": "Algo deu errado",
