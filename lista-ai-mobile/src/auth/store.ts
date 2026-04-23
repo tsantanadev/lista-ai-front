@@ -52,6 +52,19 @@ type AuthActions = {
   _setAccessToken: (token: string) => void;
 };
 
+async function runSeedIfEmpty(set: (partial: Partial<AuthState & AuthActions>) => void): Promise<void> {
+  const rows = await db.select().from(listsTable).where(isNull(listsTable.deletedAt)).limit(1);
+  if (rows.length === 0) {
+    set({ isSyncing: true, syncProgress: null });
+    try {
+      await seedFromRemote((done, total) => set({ syncProgress: { done, total } }));
+    } catch (err) {
+      if (__DEV__) console.warn('[seed] seedFromRemote failed, continuing with empty state:', err);
+    }
+    set({ isSyncing: false, syncProgress: null });
+  }
+}
+
 export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
   isAuthenticated: false,
   isLoading: true,
@@ -115,16 +128,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
       await saveAuth(tokens, user);
       set({ accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
 
-      const rows = await db.select().from(listsTable).where(isNull(listsTable.deletedAt)).limit(1);
-      if (rows.length === 0) {
-        set({ isSyncing: true, syncProgress: null });
-        try {
-          await seedFromRemote((done, total) => set({ syncProgress: { done, total } }));
-        } catch (err) {
-          if (__DEV__) console.warn('[seed] seedFromRemote failed, continuing with empty state:', err);
-        }
-        set({ isSyncing: false, syncProgress: null });
-      }
+      await runSeedIfEmpty(set);
 
       set({ isAuthenticated: true });
     } catch (e: unknown) {
@@ -149,16 +153,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
       await saveAuth(tokens, user);
       set({ accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
 
-      const rows = await db.select().from(listsTable).where(isNull(listsTable.deletedAt)).limit(1);
-      if (rows.length === 0) {
-        set({ isSyncing: true, syncProgress: null });
-        try {
-          await seedFromRemote((done, total) => set({ syncProgress: { done, total } }));
-        } catch (err) {
-          if (__DEV__) console.warn('[seed] seedFromRemote failed, continuing with empty state:', err);
-        }
-        set({ isSyncing: false, syncProgress: null });
-      }
+      await runSeedIfEmpty(set);
 
       set({ isAuthenticated: true });
     } catch (e: unknown) {
