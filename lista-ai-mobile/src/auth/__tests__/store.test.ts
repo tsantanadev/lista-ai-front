@@ -6,6 +6,7 @@ const flushPromises = () => new Promise<void>((res) => setImmediate(res));
 var mockDbDelete: jest.Mock;
 var mockDbSelect: jest.Mock;
 var mockDbFrom: jest.Mock;
+var mockDbWhere: jest.Mock;
 var mockDbLimit: jest.Mock;
 
 jest.mock('../../db', () => ({
@@ -43,7 +44,7 @@ jest.mock('../../sync/seed', () => ({
 }));
 
 import { useAuthStore } from '../store';
-import { apiRegister, apiLogin, apiRefresh, apiLogout } from '../../api/auth';
+import { apiRegister, apiLogin, apiGoogleAuth, apiRefresh, apiLogout } from '../../api/auth';
 import { seedFromRemote } from '../../sync/seed';
 
 // Build a minimal valid-looking JWT whose payload contains sub and email.
@@ -61,9 +62,14 @@ const tokenResponse = {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  // Reset seedFromRemote to default resolved behaviour; clearAllMocks() does not
+  // reset implementations, so a test that calls mockImplementation() would
+  // otherwise leak its implementation into subsequent tests.
+  (seedFromRemote as jest.Mock).mockResolvedValue(undefined);
   mockDbDelete = jest.fn().mockResolvedValue(undefined);
   mockDbLimit = jest.fn().mockResolvedValue([]); // empty DB by default
-  mockDbFrom = jest.fn().mockReturnValue({ limit: mockDbLimit });
+  mockDbWhere = jest.fn().mockReturnValue({ limit: mockDbLimit });
+  mockDbFrom = jest.fn().mockReturnValue({ where: mockDbWhere });
   mockDbSelect = jest.fn().mockReturnValue({ from: mockDbFrom });
   useAuthStore.setState({
     isAuthenticated: false,
@@ -301,5 +307,40 @@ describe('loginLocal() seed-on-login', () => {
 
     expect(useAuthStore.getState().isAuthenticated).toBe(true);
     expect(loginDone).toBe(true);
+  });
+});
+
+// ── loginGoogle() seed-on-login ────────────────────────────────────────────────
+
+// A minimal Google id_token JWT with name and email in its payload.
+const googleIdToken =
+  'eyJhbGciOiJSUzI1NiJ9.' +
+  btoa(JSON.stringify({ sub: '2', email: 'g@example.com', name: 'Gina', exp: 9999999999 })) +
+  '.sig';
+
+describe('loginGoogle() seed-on-login', () => {
+  it('calls seedFromRemote when lists table is empty after Google login', async () => {
+    (apiGoogleAuth as jest.Mock).mockResolvedValue(tokenResponse);
+    mockDbLimit.mockResolvedValue([]); // empty DB
+
+    await act(async () => {
+      await useAuthStore.getState().loginGoogle(googleIdToken);
+    });
+
+    expect(seedFromRemote).toHaveBeenCalledTimes(1);
+    expect(useAuthStore.getState().isAuthenticated).toBe(true);
+    expect(useAuthStore.getState().isSyncing).toBe(false);
+  });
+
+  it('skips seedFromRemote when DB already has lists after Google login', async () => {
+    (apiGoogleAuth as jest.Mock).mockResolvedValue(tokenResponse);
+    mockDbLimit.mockResolvedValue([{ id: 1 }]); // DB not empty
+
+    await act(async () => {
+      await useAuthStore.getState().loginGoogle(googleIdToken);
+    });
+
+    expect(seedFromRemote).not.toHaveBeenCalled();
+    expect(useAuthStore.getState().isAuthenticated).toBe(true);
   });
 });

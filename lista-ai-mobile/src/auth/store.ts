@@ -4,6 +4,7 @@ import { apiRegister, apiLogin, apiGoogleAuth, apiRefresh, apiLogout } from '../
 import i18n from '../i18n';
 import { db } from '../db';
 import { items as itemsTable, lists as listsTable, syncQueue as syncQueueTable } from '../db/schema';
+import { isNull } from 'drizzle-orm';
 import { queryClient } from '../queryClient';
 import { seedFromRemote } from '../sync/seed';
 
@@ -114,7 +115,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
       await saveAuth(tokens, user);
       set({ accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
 
-      const rows = await db.select().from(listsTable).limit(1);
+      const rows = await db.select().from(listsTable).where(isNull(listsTable.deletedAt)).limit(1);
       if (rows.length === 0) {
         set({ isSyncing: true, syncProgress: null });
         try {
@@ -146,7 +147,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
       await saveAuth(tokens, user);
       set({ accessToken: tokens.accessToken, refreshToken: tokens.refreshToken, user });
 
-      const rows = await db.select().from(listsTable).limit(1);
+      const rows = await db.select().from(listsTable).where(isNull(listsTable.deletedAt)).limit(1);
       if (rows.length === 0) {
         set({ isSyncing: true, syncProgress: null });
         try {
