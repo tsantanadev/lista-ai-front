@@ -135,7 +135,10 @@
   "sync": {
     "error": "Sync error — tap to retry",
     "syncing_one": "Syncing {{count}} item…",
-    "syncing_other": "Syncing {{count}} items…"
+    "syncing_other": "Syncing {{count}} items…",
+    "login": {
+      "syncing": "Syncing your lists…"
+    }
   },
   "errorBoundary": {
     "title": "Something went wrong",

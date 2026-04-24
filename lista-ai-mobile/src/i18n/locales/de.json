@@ -135,7 +135,10 @@
   "sync": {
     "error": "Synchronisierungsfehler — tippe zum Wiederholen",
     "syncing_one": "Synchronisiere {{count}} Element…",
-    "syncing_other": "Synchronisiere {{count}} Elemente…"
+    "syncing_other": "Synchronisiere {{count}} Elemente…",
+    "login": {
+      "syncing": "Deine Listen werden synchronisiert…"
+    }
   },
   "errorBoundary": {
     "title": "Etwas ist schiefgelaufen",

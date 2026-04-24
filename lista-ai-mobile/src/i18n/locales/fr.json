@@ -135,7 +135,10 @@
   "sync": {
     "error": "Erreur de synchronisation — appuyez pour réessayer",
     "syncing_one": "Synchronisation de {{count}} élément…",
-    "syncing_other": "Synchronisation de {{count}} éléments…"
+    "syncing_other": "Synchronisation de {{count}} éléments…",
+    "login": {
+      "syncing": "Synchronisation de vos listes…"
+    }
   },
   "errorBoundary": {
     "title": "Une erreur s'est produite",

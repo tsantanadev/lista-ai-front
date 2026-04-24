@@ -135,7 +135,10 @@
   "sync": {
     "error": "Error de sincronización — toca para reintentar",
     "syncing_one": "Sincronizando {{count}} elemento…",
-    "syncing_other": "Sincronizando {{count}} elementos…"
+    "syncing_other": "Sincronizando {{count}} elementos…",
+    "login": {
+      "syncing": "Sincronizando tus listas…"
+    }
   },
   "errorBoundary": {
     "title": "Algo salió mal",
