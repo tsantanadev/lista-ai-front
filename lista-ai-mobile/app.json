@@ -33,6 +33,12 @@
       "expo-secure-store",
       "expo-web-browser",
       "expo-localization"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9ff914f7-1c9f-4289-98c4-7abe6345ceaa"
+      }
+    },
+    "owner": "tsantana"
   }
 }
