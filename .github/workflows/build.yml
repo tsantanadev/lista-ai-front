@@ -1,0 +1,80 @@
+name: EAS Build
+
+on:
+  push:
+    branches:
+      - develop
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-test:
+    name: Build (test)
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    defaults:
+      run:
+        working-directory: lista-ai-mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: lista-ai-mobile/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: '16'
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: EAS Build (preview)
+        run: |
+          eas build \
+            --profile preview \
+            --platform all \
+            --non-interactive \
+            --env "EXPO_PUBLIC_API_BASE_URL=${{ secrets.TEST_API_URL }}" \
+            --env "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=${{ secrets.TEST_GOOGLE_WEB_CLIENT_ID }}" \
+            --env "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=${{ secrets.TEST_GOOGLE_IOS_CLIENT_ID }}" \
+            --env "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=${{ secrets.TEST_GOOGLE_ANDROID_CLIENT_ID }}"
+
+  build-prod:
+    name: Build (production)
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment: production
+    defaults:
+      run:
+        working-directory: lista-ai-mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: lista-ai-mobile/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: '16'
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: EAS Build (production)
+        run: |
+          eas build \
+            --profile production \
+            --platform all \
+            --non-interactive \
+            --env "EXPO_PUBLIC_API_BASE_URL=${{ secrets.PROD_API_URL }}" \
+            --env "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=${{ secrets.PROD_GOOGLE_WEB_CLIENT_ID }}" \
+            --env "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=${{ secrets.PROD_GOOGLE_IOS_CLIENT_ID }}" \
+            --env "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=${{ secrets.PROD_GOOGLE_ANDROID_CLIENT_ID }}"
