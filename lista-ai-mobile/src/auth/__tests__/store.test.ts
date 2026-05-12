@@ -87,7 +87,7 @@ beforeEach(() => {
 
 describe('register()', () => {
   it('sets isAuthenticated and stores tokens on success', async () => {
-    (apiRegister as jest.Mock).mockResolvedValue(tokenResponse);
+    (apiRegister as jest.Mock).mockResolvedValue({ status: 'authenticated', tokens: tokenResponse });
 
     await act(async () => {
       await useAuthStore.getState().register('a@b.com', 'pass123', 'Alice');
@@ -98,6 +98,22 @@ describe('register()', () => {
     expect(state.accessToken).toBe(tokenResponse.accessToken);
     expect(state.refreshToken).toBe(tokenResponse.refreshToken);
     expect(state.user?.email).toBe('a@b.com');
+  });
+
+  it('sets pendingVerificationEmail and does not authenticate when verification is required', async () => {
+    (apiRegister as jest.Mock).mockResolvedValue({
+      status: 'pending_verification',
+      message: 'Check your email',
+    });
+
+    await act(async () => {
+      await useAuthStore.getState().register('a@b.com', 'pass123', 'Alice');
+    });
+
+    const state = useAuthStore.getState();
+    expect(state.isAuthenticated).toBe(false);
+    expect(state.pendingVerificationEmail).toBe('a@b.com');
+    expect(state.accessToken).toBeNull();
   });
 
   it('sets error and re-throws on failure', async () => {

@@ -3,7 +3,9 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { Register } from '../index';
 
 jest.mock('../../../auth/store', () => ({
-  useAuthStore: jest.fn(),
+  useAuthStore: Object.assign(jest.fn(), {
+    getState: jest.fn(() => ({ pendingVerificationEmail: null })),
+  }),
 }));
 
 import { useAuthStore } from '../../../auth/store';
@@ -79,6 +81,26 @@ describe('Register screen', () => {
 
     await waitFor(() => {
       expect(register).toHaveBeenCalledWith('alice@example.com', 'password123', 'Alice');
+    });
+  });
+
+  it('navigates to VerifyEmailPending when registration requires email verification', async () => {
+    const navigate = jest.fn();
+    (useAuthStore.getState as jest.Mock).mockReturnValue({
+      pendingVerificationEmail: 'alice@example.com',
+    });
+
+    const { getByPlaceholderText, getByText } = render(
+      <Register navigation={{ ...mockNavigation, navigate }} route={{} as any} />,
+    );
+
+    fireEvent.changeText(getByPlaceholderText('auth.register.namePlaceholder'), 'Alice');
+    fireEvent.changeText(getByPlaceholderText('auth.emailPlaceholder'), 'alice@example.com');
+    fireEvent.changeText(getByPlaceholderText('auth.passwordPlaceholder'), 'password123');
+    fireEvent.press(getByText('auth.register.createAccount'));
+
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith('VerifyEmailPending', { email: 'alice@example.com' });
     });
   });
 
