@@ -19,7 +19,8 @@
       "noAccount": "¿No tienes una cuenta?",
       "signUp": "Regístrate",
       "googleError": "Error al iniciar sesión con Google. Inténtalo de nuevo.",
-      "invalidCredentials": "Credenciales inválidas. Verifica e inténtalo de nuevo."
+      "invalidCredentials": "Credenciales inválidas. Verifica e inténtalo de nuevo.",
+      "emailNotVerified": "Por favor, verifica tu correo electrónico antes de iniciar sesión."
     },
     "register": {
       "fullName": "Nombre completo",
@@ -31,6 +32,31 @@
       "signIn": "Iniciar sesión",
       "googleError": "Error al iniciar sesión con Google. Inténtalo de nuevo.",
       "createError": "Error al crear la cuenta. Inténtalo de nuevo."
+    },
+    "verification": {
+      "pending": {
+        "title": "Revisa tu correo",
+        "instructions": "Enviamos un enlace de verificación a",
+        "resendButton": "Reenviar correo de verificación",
+        "resendSuccess": "¡Correo enviado! Revisa tu bandeja de entrada.",
+        "resendCooldown": "Por favor, espera un momento antes de solicitar otro correo.",
+        "resendError": "Algo salió mal. Inténtalo de nuevo.",
+        "backToLogin": "Volver al inicio de sesión"
+      },
+      "verify": {
+        "loading": "Verificando tu correo…",
+        "successTitle": "¡Correo verificado!",
+        "successBody": "Tu correo ha sido verificado. Ahora puedes iniciar sesión.",
+        "goToLogin": "Ir al inicio de sesión",
+        "expiredTitle": "Enlace expirado",
+        "expiredBody": "Este enlace de verificación ha expirado o ya fue usado. Solicita uno nuevo.",
+        "requestNewLink": "Solicitar nuevo enlace",
+        "invalidTitle": "Enlace inválido",
+        "invalidBody": "Este enlace de verificación no es válido. Solicita uno nuevo.",
+        "networkErrorTitle": "Sin conexión",
+        "networkErrorBody": "No se pudo conectar al servidor. Comprueba tu conexión e inténtalo de nuevo.",
+        "retry": "Reintentar"
+      }
     }
   },
   "lists": {

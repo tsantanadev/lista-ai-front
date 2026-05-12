@@ -19,7 +19,8 @@
       "noAccount": "Noch kein Konto?",
       "signUp": "Registrieren",
       "googleError": "Fehler bei der Anmeldung mit Google. Bitte erneut versuchen.",
-      "invalidCredentials": "Ungültige Anmeldedaten. Bitte prüfen und erneut versuchen."
+      "invalidCredentials": "Ungültige Anmeldedaten. Bitte prüfen und erneut versuchen.",
+      "emailNotVerified": "Bitte bestätige deine E-Mail-Adresse, bevor du dich anmeldest."
     },
     "register": {
       "fullName": "Vollständiger Name",
@@ -31,6 +32,31 @@
       "signIn": "Anmelden",
       "googleError": "Fehler bei der Anmeldung mit Google. Bitte erneut versuchen.",
       "createError": "Fehler beim Erstellen des Kontos. Bitte erneut versuchen."
+    },
+    "verification": {
+      "pending": {
+        "title": "E-Mail prüfen",
+        "instructions": "Wir haben einen Bestätigungslink gesendet an",
+        "resendButton": "Bestätigungs-E-Mail erneut senden",
+        "resendSuccess": "E-Mail gesendet! Überprüfe deinen Posteingang.",
+        "resendCooldown": "Bitte warte einen Moment, bevor du eine weitere E-Mail anforderst.",
+        "resendError": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
+        "backToLogin": "Zurück zur Anmeldung"
+      },
+      "verify": {
+        "loading": "E-Mail wird bestätigt…",
+        "successTitle": "E-Mail bestätigt!",
+        "successBody": "Deine E-Mail wurde bestätigt. Du kannst dich jetzt anmelden.",
+        "goToLogin": "Zur Anmeldung",
+        "expiredTitle": "Link abgelaufen",
+        "expiredBody": "Dieser Bestätigungslink ist abgelaufen oder wurde bereits verwendet. Fordere einen neuen an.",
+        "requestNewLink": "Neuen Link anfordern",
+        "invalidTitle": "Ungültiger Link",
+        "invalidBody": "Dieser Bestätigungslink ist nicht gültig. Bitte fordere einen neuen an.",
+        "networkErrorTitle": "Keine Verbindung",
+        "networkErrorBody": "Der Server konnte nicht erreicht werden. Überprüfe deine Verbindung und versuche es erneut.",
+        "retry": "Erneut versuchen"
+      }
     }
   },
   "lists": {

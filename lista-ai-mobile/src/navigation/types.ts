@@ -18,8 +18,10 @@ export type RootTabParamList = {
 
 // ── Auth stack (unauthenticated) ──────────────────────────────────────────────
 export type AuthStackParamList = {
-  Login:    undefined;
-  Register: undefined;
+  Login:                undefined;
+  Register:             undefined;
+  VerifyEmailPending:   { email: string };
+  VerifyEmail:          { token: string };
 };
 
 // ── Root stack (wraps tabs + modal-style screens) ────────────────────────────
@@ -36,6 +38,8 @@ export type ListDetailProps = NativeStackScreenProps<ListsStackParamList, 'ListD
 export type AddEditListProps = NativeStackScreenProps<ListsStackParamList, 'AddEditList'>;
 export type AddEditItemProps = NativeStackScreenProps<ListsStackParamList, 'AddEditItem'>;
 
-export type LoginProps     = NativeStackScreenProps<AuthStackParamList, 'Login'>;
-export type RegisterProps  = NativeStackScreenProps<AuthStackParamList, 'Register'>;
+export type LoginProps              = NativeStackScreenProps<AuthStackParamList, 'Login'>;
+export type RegisterProps           = NativeStackScreenProps<AuthStackParamList, 'Register'>;
+export type VerifyEmailPendingProps = NativeStackScreenProps<AuthStackParamList, 'VerifyEmailPending'>;
+export type VerifyEmailProps        = NativeStackScreenProps<AuthStackParamList, 'VerifyEmail'>;
 export type PerfilInfoProps = NativeStackScreenProps<RootStackParamList, 'PerfilInfo'>;

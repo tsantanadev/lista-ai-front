@@ -10,11 +10,28 @@ import { Settings }  from '../screens/Settings';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const linking: any = {
+  prefixes: ['https://app.lista-ai.com', 'listai://'],
+  config: {
+    screens: {
+      Auth: {
+        screens: {
+          VerifyEmail: {
+            path: 'verify-email',
+            parse: { token: (token: string) => token },
+          },
+        },
+      },
+    },
+  },
+};
+
 export function RootStack() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isAuthenticated ? (
           <>
