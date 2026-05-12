@@ -40,6 +40,7 @@
         "resendButton": "Bestätigungs-E-Mail erneut senden",
         "resendSuccess": "E-Mail gesendet! Überprüfe deinen Posteingang.",
         "resendCooldown": "Bitte warte einen Moment, bevor du eine weitere E-Mail anforderst.",
+        "resendError": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
         "backToLogin": "Zurück zur Anmeldung"
       },
       "verify": {
@@ -51,7 +52,10 @@
         "expiredBody": "Dieser Bestätigungslink ist abgelaufen oder wurde bereits verwendet. Fordere einen neuen an.",
         "requestNewLink": "Neuen Link anfordern",
         "invalidTitle": "Ungültiger Link",
-        "invalidBody": "Dieser Bestätigungslink ist nicht gültig. Bitte fordere einen neuen an."
+        "invalidBody": "Dieser Bestätigungslink ist nicht gültig. Bitte fordere einen neuen an.",
+        "networkErrorTitle": "Keine Verbindung",
+        "networkErrorBody": "Der Server konnte nicht erreicht werden. Überprüfe deine Verbindung und versuche es erneut.",
+        "retry": "Erneut versuchen"
       }
     }
   },

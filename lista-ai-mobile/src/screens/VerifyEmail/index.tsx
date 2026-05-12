@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,14 +8,14 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { CheckCircle, XCircle, Clock } from 'lucide-react-native';
+import { CheckCircle, XCircle, Clock, WifiOff } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import type { AxiosError } from 'axios';
 import { useTheme } from '../../theme/ThemeContext';
 import { apiVerifyEmail } from '../../api/auth';
 import type { VerifyEmailProps } from '../../navigation/types';
 
-type VerifyState = 'loading' | 'success' | 'invalid' | 'expired';
+type VerifyState = 'loading' | 'success' | 'invalid' | 'expired' | 'networkError';
 
 export function VerifyEmail({ route, navigation }: VerifyEmailProps) {
   const { token } = route.params;
@@ -23,18 +23,24 @@ export function VerifyEmail({ route, navigation }: VerifyEmailProps) {
   const { t } = useTranslation();
   const [state, setState] = useState<VerifyState>('loading');
 
-  useEffect(() => {
+  const verify = useCallback(() => {
+    setState('loading');
     apiVerifyEmail(token)
       .then(() => setState('success'))
       .catch((e: AxiosError) => {
-        const status = e.response?.status;
-        if (status === 410) {
+        if (!e.response) {
+          setState('networkError');
+        } else if (e.response.status === 410) {
           setState('expired');
         } else {
           setState('invalid');
         }
       });
   }, [token]);
+
+  useEffect(() => {
+    verify();
+  }, [verify]);
 
   const s = StyleSheet.create({
     safe:     { flex: 1, backgroundColor: theme.background },
@@ -112,7 +118,27 @@ export function VerifyEmail({ route, navigation }: VerifyEmailProps) {
     );
   }
 
-  // invalid (400 or network error)
+  if (state === 'networkError') {
+    return (
+      <SafeAreaView style={s.safe}>
+        <ScrollView contentContainerStyle={s.scroll}>
+          <View style={[s.iconBox, { backgroundColor: `${theme.neutral}1E` }]}>
+            <WifiOff size={44} color={theme.neutral} strokeWidth={1.6} />
+          </View>
+          <Text style={s.title}>{t('auth.verification.verify.networkErrorTitle')}</Text>
+          <Text style={s.body}>{t('auth.verification.verify.networkErrorBody')}</Text>
+          <TouchableOpacity style={s.primaryBtn} onPress={verify} activeOpacity={0.85}>
+            <Text style={s.primaryBtnText}>{t('auth.verification.verify.retry')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={s.secondaryBtn} onPress={() => navigation.navigate('Login')} activeOpacity={0.85}>
+            <Text style={s.secondaryBtnText}>{t('auth.verification.pending.backToLogin')}</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  // invalid (400 or unexpected status)
   return (
     <SafeAreaView style={s.safe}>
       <ScrollView contentContainerStyle={s.scroll}>

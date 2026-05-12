@@ -2,36 +2,40 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
+  TextInput,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Mail, CheckCircle } from 'lucide-react-native';
+import { Mail } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../theme/ThemeContext';
 import { apiResendVerification } from '../../api/auth';
 import type { AxiosError } from 'axios';
 import type { VerifyEmailPendingProps } from '../../navigation/types';
 
+type ResendResult = 'success' | 'cooldown' | 'error' | null;
+
 export function VerifyEmailPending({ route, navigation }: VerifyEmailPendingProps) {
   const { email } = route.params;
   const { theme } = useTheme();
   const { t } = useTranslation();
 
-  const [resending, setResending]     = useState(false);
-  const [resendResult, setResendResult] = useState<'success' | 'cooldown' | null>(null);
+  const [emailValue, setEmailValue] = useState(email);
+  const [resending, setResending]   = useState(false);
+  const [resendResult, setResendResult] = useState<ResendResult>(null);
 
   async function handleResend() {
     setResending(true);
     setResendResult(null);
     try {
-      await apiResendVerification(email);
+      await apiResendVerification(emailValue);
       setResendResult('success');
     } catch (e: unknown) {
       const status = (e as AxiosError)?.response?.status;
-      setResendResult(status === 429 ? 'cooldown' : 'cooldown');
+      setResendResult(status === 429 ? 'cooldown' : 'error');
     } finally {
       setResending(false);
     }
@@ -51,6 +55,11 @@ export function VerifyEmailPending({ route, navigation }: VerifyEmailPendingProp
     title:       { color: theme.textPrimary, fontSize: 24, fontWeight: '700', textAlign: 'center', marginBottom: 12 },
     body:        { color: theme.neutral, fontSize: 15, textAlign: 'center', lineHeight: 22, marginBottom: 8 },
     email:       { color: theme.textPrimary, fontSize: 15, fontWeight: '600', textAlign: 'center', marginBottom: 32 },
+    emailInput: {
+      color: theme.textPrimary, fontSize: 15, fontWeight: '600', textAlign: 'center',
+      backgroundColor: theme.surfaceElevated, borderWidth: 1.5, borderColor: theme.borderSubtle,
+      borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, marginBottom: 32,
+    },
     primaryBtn: {
       backgroundColor: theme.primary, borderRadius: 12,
       paddingVertical: 16, alignItems: 'center', marginBottom: 16,
@@ -68,9 +77,14 @@ export function VerifyEmailPending({ route, navigation }: VerifyEmailPendingProp
       backgroundColor: `${theme.accent}1E`,
       borderColor: `${theme.accent}4D`,
     },
-    feedbackText:    { fontSize: 13, textAlign: 'center' },
+    feedbackError: {
+      backgroundColor: `${theme.destructive}1E`,
+      borderColor: `${theme.destructive}4D`,
+    },
+    feedbackText:         { fontSize: 13, textAlign: 'center' },
     feedbackTextSuccess:  { color: theme.primary },
     feedbackTextCooldown: { color: theme.accent },
+    feedbackTextError:    { color: theme.destructive },
     linkRow:    { flexDirection: 'row', justifyContent: 'center', marginTop: 8 },
     link:       { color: theme.primary, fontSize: 14, fontWeight: '600' },
   });
@@ -84,7 +98,20 @@ export function VerifyEmailPending({ route, navigation }: VerifyEmailPendingProp
           </View>
           <Text style={s.title}>{t('auth.verification.pending.title')}</Text>
           <Text style={s.body}>{t('auth.verification.pending.instructions')}</Text>
-          <Text style={s.email}>{email}</Text>
+          {email ? (
+            <Text style={s.email}>{emailValue}</Text>
+          ) : (
+            <TextInput
+              style={s.emailInput}
+              value={emailValue}
+              onChangeText={setEmailValue}
+              placeholder={t('auth.emailPlaceholder')}
+              placeholderTextColor={theme.neutral}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              autoComplete="email"
+            />
+          )}
         </View>
 
         {resendResult === 'success' && (
@@ -98,6 +125,13 @@ export function VerifyEmailPending({ route, navigation }: VerifyEmailPendingProp
           <View style={[s.feedbackBanner, s.feedbackCooldown]}>
             <Text style={[s.feedbackText, s.feedbackTextCooldown]}>
               {t('auth.verification.pending.resendCooldown')}
+            </Text>
+          </View>
+        )}
+        {resendResult === 'error' && (
+          <View style={[s.feedbackBanner, s.feedbackError]}>
+            <Text style={[s.feedbackText, s.feedbackTextError]}>
+              {t('auth.verification.pending.resendError')}
             </Text>
           </View>
         )}

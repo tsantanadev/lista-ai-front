@@ -40,6 +40,7 @@
         "resendButton": "Reenviar correo de verificación",
         "resendSuccess": "¡Correo enviado! Revisa tu bandeja de entrada.",
         "resendCooldown": "Por favor, espera un momento antes de solicitar otro correo.",
+        "resendError": "Algo salió mal. Inténtalo de nuevo.",
         "backToLogin": "Volver al inicio de sesión"
       },
       "verify": {
@@ -51,7 +52,10 @@
         "expiredBody": "Este enlace de verificación ha expirado o ya fue usado. Solicita uno nuevo.",
         "requestNewLink": "Solicitar nuevo enlace",
         "invalidTitle": "Enlace inválido",
-        "invalidBody": "Este enlace de verificación no es válido. Solicita uno nuevo."
+        "invalidBody": "Este enlace de verificación no es válido. Solicita uno nuevo.",
+        "networkErrorTitle": "Sin conexión",
+        "networkErrorBody": "No se pudo conectar al servidor. Comprueba tu conexión e inténtalo de nuevo.",
+        "retry": "Reintentar"
       }
     }
   },

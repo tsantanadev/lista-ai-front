@@ -40,6 +40,7 @@
         "resendButton": "Resend verification email",
         "resendSuccess": "Email sent! Check your inbox.",
         "resendCooldown": "Please wait a moment before requesting another email.",
+        "resendError": "Something went wrong. Please try again.",
         "backToLogin": "Back to login"
       },
       "verify": {
@@ -51,7 +52,10 @@
         "expiredBody": "This verification link has expired or was already used. Request a new one.",
         "requestNewLink": "Request a new link",
         "invalidTitle": "Invalid link",
-        "invalidBody": "This verification link is not valid. Please request a new one."
+        "invalidBody": "This verification link is not valid. Please request a new one.",
+        "networkErrorTitle": "No connection",
+        "networkErrorBody": "Could not reach the server. Check your connection and try again.",
+        "retry": "Try again"
       }
     }
   },
