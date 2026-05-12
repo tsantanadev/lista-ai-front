@@ -17,6 +17,7 @@
       "signIn": "Entrar",
       "forgotPassword": "Esqueceu a senha?",
       "noAccount": "Não tem uma conta?",
+      "emailNotVerified": "Por favor, verifique seu e-mail antes de entrar.",
       "signUp": "Cadastre-se",
       "googleError": "Erro ao entrar com Google. Tente novamente.",
       "invalidCredentials": "Credenciais inválidas. Verifique e tente novamente."
@@ -31,6 +32,27 @@
       "signIn": "Entrar",
       "googleError": "Erro ao entrar com Google. Tente novamente.",
       "createError": "Erro ao criar conta. Tente novamente."
+    },
+    "verification": {
+      "pending": {
+        "title": "Verifique seu e-mail",
+        "instructions": "Enviamos um link de verificação para",
+        "resendButton": "Reenviar e-mail de verificação",
+        "resendSuccess": "E-mail enviado! Verifique sua caixa de entrada.",
+        "resendCooldown": "Aguarde um momento antes de solicitar outro e-mail.",
+        "backToLogin": "Voltar para o login"
+      },
+      "verify": {
+        "loading": "Verificando seu e-mail…",
+        "successTitle": "E-mail verificado!",
+        "successBody": "Seu e-mail foi verificado. Agora você pode entrar.",
+        "goToLogin": "Ir para o login",
+        "expiredTitle": "Link expirado",
+        "expiredBody": "Este link de verificação expirou ou já foi usado. Solicite um novo.",
+        "requestNewLink": "Solicitar novo link",
+        "invalidTitle": "Link inválido",
+        "invalidBody": "Este link de verificação não é válido. Solicite um novo."
+      }
     }
   },
   "lists": {

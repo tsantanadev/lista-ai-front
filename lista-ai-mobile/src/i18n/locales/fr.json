@@ -19,7 +19,8 @@
       "noAccount": "Pas encore de compte ?",
       "signUp": "S'inscrire",
       "googleError": "Erreur lors de la connexion avec Google. Veuillez réessayer.",
-      "invalidCredentials": "Identifiants invalides. Vérifiez et réessayez."
+      "invalidCredentials": "Identifiants invalides. Vérifiez et réessayez.",
+      "emailNotVerified": "Veuillez vérifier votre e-mail avant de vous connecter."
     },
     "register": {
       "fullName": "Nom complet",
@@ -31,6 +32,27 @@
       "signIn": "Se connecter",
       "googleError": "Erreur lors de la connexion avec Google. Veuillez réessayer.",
       "createError": "Erreur lors de la création du compte. Veuillez réessayer."
+    },
+    "verification": {
+      "pending": {
+        "title": "Vérifiez votre e-mail",
+        "instructions": "Nous avons envoyé un lien de vérification à",
+        "resendButton": "Renvoyer l'e-mail de vérification",
+        "resendSuccess": "E-mail envoyé ! Vérifiez votre boîte de réception.",
+        "resendCooldown": "Veuillez patienter avant de demander un nouvel e-mail.",
+        "backToLogin": "Retour à la connexion"
+      },
+      "verify": {
+        "loading": "Vérification de votre e-mail…",
+        "successTitle": "E-mail vérifié !",
+        "successBody": "Votre e-mail a été vérifié. Vous pouvez maintenant vous connecter.",
+        "goToLogin": "Aller à la connexion",
+        "expiredTitle": "Lien expiré",
+        "expiredBody": "Ce lien de vérification a expiré ou a déjà été utilisé. Demandez-en un nouveau.",
+        "requestNewLink": "Demander un nouveau lien",
+        "invalidTitle": "Lien invalide",
+        "invalidBody": "Ce lien de vérification n'est pas valide. Veuillez en demander un nouveau."
+      }
     }
   },
   "lists": {

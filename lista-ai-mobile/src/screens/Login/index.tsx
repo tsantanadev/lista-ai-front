@@ -31,7 +31,7 @@ export function Login({ navigation }: LoginProps) {
   const [googleLoading, setGoogleLoading] = useState(false);
   const { theme } = useTheme();
 
-  const { loginLocal, loginGoogle, error, clearError, isSyncing, syncProgress } = useAuthStore();
+  const { loginLocal, loginGoogle, error, clearError, isSyncing, syncProgress, pendingVerificationEmail } = useAuthStore();
   const { t } = useTranslation();
 
   const [_req, response, promptAsync] = Google.useAuthRequest({
@@ -157,6 +157,14 @@ export function Login({ navigation }: LoginProps) {
           {error ? (
             <TouchableOpacity style={s.errorBanner} onPress={clearError}>
               <Text style={s.errorText}>{error}</Text>
+            </TouchableOpacity>
+          ) : null}
+          {pendingVerificationEmail ? (
+            <TouchableOpacity
+              style={[s.linkRow, { marginBottom: 8, marginTop: 0 }]}
+              onPress={() => navigation.navigate('VerifyEmailPending', { email: pendingVerificationEmail })}
+            >
+              <Text style={s.link}>{t('auth.verification.pending.resendButton')}</Text>
             </TouchableOpacity>
           ) : null}
           <TouchableOpacity style={s.googleBtn} onPress={() => promptAsync()} disabled={googleLoading} activeOpacity={0.8}>

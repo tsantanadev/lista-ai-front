@@ -57,7 +57,14 @@ export function Register({ navigation }: RegisterProps) {
     if (!name.trim() || !email.trim() || !password) return;
     setLoading(true);
     try {
-      await register(email.trim().toLowerCase(), password, name.trim());
+      const trimmedEmail = email.trim().toLowerCase();
+      await register(trimmedEmail, password, name.trim());
+      // If email verification is required the store sets pendingVerificationEmail
+      // without authenticating; navigate to the pending screen.
+      const pending = useAuthStore.getState().pendingVerificationEmail;
+      if (pending) {
+        navigation.navigate('VerifyEmailPending', { email: pending });
+      }
     } finally {
       setLoading(false);
     }

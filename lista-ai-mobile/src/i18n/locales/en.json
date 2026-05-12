@@ -19,7 +19,8 @@
       "noAccount": "Don't have an account?",
       "signUp": "Sign up",
       "googleError": "Error signing in with Google. Please try again.",
-      "invalidCredentials": "Invalid credentials. Please check and try again."
+      "invalidCredentials": "Invalid credentials. Please check and try again.",
+      "emailNotVerified": "Please verify your email before signing in."
     },
     "register": {
       "fullName": "Full name",
@@ -31,6 +32,27 @@
       "signIn": "Sign in",
       "googleError": "Error signing in with Google. Please try again.",
       "createError": "Error creating account. Please try again."
+    },
+    "verification": {
+      "pending": {
+        "title": "Check your email",
+        "instructions": "We sent a verification link to",
+        "resendButton": "Resend verification email",
+        "resendSuccess": "Email sent! Check your inbox.",
+        "resendCooldown": "Please wait a moment before requesting another email.",
+        "backToLogin": "Back to login"
+      },
+      "verify": {
+        "loading": "Verifying your email…",
+        "successTitle": "Email verified!",
+        "successBody": "Your email has been verified. You can now sign in.",
+        "goToLogin": "Go to login",
+        "expiredTitle": "Link expired",
+        "expiredBody": "This verification link has expired or was already used. Request a new one.",
+        "requestNewLink": "Request a new link",
+        "invalidTitle": "Invalid link",
+        "invalidBody": "This verification link is not valid. Please request a new one."
+      }
     }
   },
   "lists": {

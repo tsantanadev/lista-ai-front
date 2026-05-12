@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { saveAuth, loadAuth, clearAuth, StoredUser } from './storage';
 import { apiRegister, apiLogin, apiGoogleAuth, apiRefresh, apiLogout } from '../api/auth';
+import type { AxiosError } from 'axios';
 import i18n from '../i18n';
 import { db } from '../db';
 import { items as itemsTable, lists as listsTable, syncQueue as syncQueueTable } from '../db/schema';
@@ -38,6 +39,7 @@ type AuthState = {
   accessToken: string | null;
   refreshToken: string | null;
   error: string | null;
+  pendingVerificationEmail: string | null;
 };
 
 type AuthActions = {
@@ -48,6 +50,7 @@ type AuthActions = {
   refreshTokens: () => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
+  setPendingVerificationEmail: (email: string | null) => void;
   // Called by interceptor to inject a new access token after a silent refresh
   _setAccessToken: (token: string) => void;
 };
@@ -74,6 +77,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
   accessToken: null,
   refreshToken: null,
   error: null,
+  pendingVerificationEmail: null,
 
   hydrate: async () => {
     try {
@@ -97,7 +101,12 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
   register: async (email, password, name) => {
     set({ error: null });
     try {
-      const tokens = await apiRegister(email, password, name);
+      const result = await apiRegister(email, password, name);
+      if (result.status === 'pending_verification') {
+        set({ pendingVerificationEmail: email });
+        return;
+      }
+      const { tokens } = result;
       const payload = decodeJwtPayload(tokens.accessToken);
       const user: AuthUser = {
         id:    String(payload['sub'] ?? ''),
@@ -115,7 +124,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
   },
 
   loginLocal: async (email, password) => {
-    set({ error: null });
+    set({ error: null, pendingVerificationEmail: null });
     try {
       const tokens = await apiLogin(email, password);
       const payload = decodeJwtPayload(tokens.accessToken);
@@ -132,9 +141,13 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
 
       set({ isAuthenticated: true });
     } catch (e: unknown) {
-      const msg = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail
-        ?? i18n.t('auth.login.invalidCredentials');
-      set({ error: msg });
+      const axiosErr = e as AxiosError<{ detail?: string }>;
+      if (axiosErr.response?.status === 403) {
+        set({ error: i18n.t('auth.login.emailNotVerified'), pendingVerificationEmail: email });
+      } else {
+        const msg = axiosErr.response?.data?.detail ?? i18n.t('auth.login.invalidCredentials');
+        set({ error: msg });
+      }
       throw e;
     }
   },
@@ -188,6 +201,8 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
+
+  setPendingVerificationEmail: (email) => set({ pendingVerificationEmail: email }),
 
   _setAccessToken: (token) => set({ accessToken: token }),
 }));
